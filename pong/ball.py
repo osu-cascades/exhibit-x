@@ -20,7 +20,8 @@ class Ball():
             yDirection *= -1 
             
         for player in players:
-            if (player.yPos - 10) <= self.yPos <= (player.yPos +10):
+            
+            if ((player.yPos - 100) <= self.yPos <= (player.yPos + 100)) and ((player.xPos - 5)  <= self.xPos <= (player.xPos + 5)):
                 xDirection *= -1
 
         
