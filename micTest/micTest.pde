@@ -1,4 +1,6 @@
 import processing.sound.*;
+import ddf.minim.*;
+import ddf.minim.ugens.*;
 
 AudioIn in;
 Amplitude amp;
@@ -6,6 +8,7 @@ float y;
 float ypos = 100;
 float xpos = 100;
 int direction = 1;
+Frequency test;
 
 void setup() {
   size(640, 360);
