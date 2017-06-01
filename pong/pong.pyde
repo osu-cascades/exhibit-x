@@ -24,6 +24,8 @@ def draw():
     player2.draw()
     newBall.draw()
     newBall.move(width, height,players)
+    frameRateText = "frame rate: " + str (frameRate)
+    text( frameRateText, 12, 60)
         
 def keyPressed():
     if key == 'w':
