@@ -9,6 +9,7 @@ struct Model {
     ball: Ball,
 }
 
+#[derive(Copy, Clone)]
 struct Point {
     x: f32,
     y: f32,
@@ -21,22 +22,32 @@ struct Ball {
 
 impl Ball {
     fn update(&self, boundary: Rect) -> Ball {
+        self.update_velocity(boundary).update_position()
+    }
+
+    fn update_velocity(&self, boundary: Rect) -> Ball {
         let Ball{ position, velocity } = self;
-        let velocity = Point {
-            x: if position.x < boundary.left() || position.x > boundary.right() 
-                {-1.0 * velocity.x } 
-                else { velocity.x },
-            y: if position.y < boundary.bottom() || position.y > boundary.top() 
-            {-1.0 * velocity.y } 
-            else { velocity.y }
-        };
-        Ball {
-            position: Point { 
-                x: position.x + velocity.x,
-                y: position.y + velocity.y,
-            },
-            velocity
+        let mut velocity = velocity.clone();
+
+        if position.x < boundary.left() || position.x > boundary.right() {
+            velocity.x *= -1.0; 
         }
+
+        if position.y < boundary.bottom() || position.y > boundary.top() {
+            velocity.y *= -1.0; 
+        }
+
+        Ball { position: *position, velocity }
+    }
+
+    fn update_position(&self) -> Ball {
+        let Ball{ position, velocity } = self;
+        let position = Point {
+            x: position.x + velocity.x,
+            y: position.y + velocity.y,
+        };
+
+        Ball {position, velocity: *velocity}
     }
 
     fn draw(&self, draw: &Draw) {
@@ -50,7 +61,7 @@ impl Ball {
 fn model(app: &App) -> Model {
     let ball = Ball {
         position: Point { x: 0.0, y: 0.0 },
-        velocity: Point { x: 10.0, y: 2.0 }, 
+        velocity: Point { x: 1.0, y: -10.0 }, 
     };
     let _window = app.new_window().view(view).build().unwrap();
     Model { ball, _window }
