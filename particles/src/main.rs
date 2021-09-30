@@ -1,4 +1,5 @@
 use nannou::prelude::*;
+use std::cmp::max;
 
 fn main() {
     nannou::app(model).update(update).run();
@@ -15,6 +16,7 @@ struct Point {
     y: f32,
 }
 
+#[derive(Copy, Clone)]
 struct Ball {
     position: Point,
     velocity: Point,
@@ -22,29 +24,35 @@ struct Ball {
 
 impl Ball {
     fn update(&self, boundary: Rect) -> Ball {
-        self.update_velocity(boundary).update_position()
+        self.update_velocity(boundary).update_position(boundary)
     }
 
     fn update_velocity(&self, boundary: Rect) -> Ball {
         let Ball{ position, velocity } = self;
         let mut velocity = velocity.clone();
 
-        if position.x < boundary.left() || position.x > boundary.right() {
+        if position.x <= boundary.left() || position.x >= boundary.right() {
             velocity.x *= -1.0; 
         }
 
-        if position.y < boundary.bottom() || position.y > boundary.top() {
+        if position.y <= boundary.bottom() || position.y >= boundary.top() {
             velocity.y *= -1.0; 
         }
+
+        if position.y <= boundary.bottom() {
+            velocity.y *= 0.9;
+        }
+
+        velocity.y -= 0.1;
 
         Ball { position: *position, velocity }
     }
 
-    fn update_position(&self) -> Ball {
+    fn update_position(&self, boundary: Rect) -> Ball {
         let Ball{ position, velocity } = self;
         let position = Point {
             x: position.x + velocity.x,
-            y: position.y + velocity.y,
+            y: max((position.y + velocity.y) as i32, boundary.bottom() as i32) as f32 // why df isn't Ord impilented for f32?!
         };
 
         Ball {position, velocity: *velocity}
