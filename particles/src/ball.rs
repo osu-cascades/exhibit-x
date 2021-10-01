@@ -1,35 +1,32 @@
-// mod point;
-
 use nannou::prelude::*;
 use nannou::color::rgb::Rgb;
 use nannou::color::encoding::Srgb;
 use nannou::geom::Ellipse;
 use nannou::prelude::geom::Range;
 use nannou::glam::Vec2;
-use crate::point::Point;
-
-pub fn new(position: Point, radius: f32, velocity: Point, color: Rgb<Srgb, u8>) -> Ball {
-    let Point { x, y } = position;
-    Ball {
-        velocity,
-        color,
-        ellipse: Ellipse {
-            rect: Rect {
-                x: Range { 
-                    start: x - radius,
-                    end: x + radius
-                },
-                y: Range {
-                    start: y - radius,
-                    end: y + radius
-                }
-            },
-            resolution: 10.0,
-        }
-    }
-}
 
 impl Ball {
+    pub fn new(position: Vec2, radius: f32, velocity: Vec2, color: Rgb<Srgb, u8>) -> Ball {
+        let [x, y] = position.to_array();
+        Ball {
+            velocity,
+            color,
+            ellipse: Ellipse {
+                rect: Rect {
+                    x: Range { 
+                        start: x - radius,
+                        end: x + radius
+                    },
+                    y: Range {
+                        start: y - radius,
+                        end: y + radius
+                    }
+                },
+                resolution: 10.0,
+            }
+        }
+    }
+
     pub fn update(&self, boundary: Rect) -> Ball {
         self.update_velocity(boundary).update_position(boundary)
     }
@@ -65,14 +62,13 @@ impl Ball {
 
     fn update_position(&self, boundary: Rect) -> Ball {
         let Ball{ ellipse, velocity, .. } = *self;
-        let Point{ x, y } = velocity;
         let mut rect = ellipse.rect;
 
         if rect.bottom() <= boundary.bottom() {
             rect = rect.align_bottom_of(boundary);
         }
 
-        rect = rect.shift_x(x).shift_y(y);
+        rect = rect.shift(velocity);
         
         let ellipse = Ellipse { rect, ..ellipse };
 
@@ -82,6 +78,6 @@ impl Ball {
 
 pub struct Ball {
     ellipse: Ellipse,
-    velocity: Point,
+    velocity: Vec2,
     color:  Rgb<Srgb, u8>,
 }

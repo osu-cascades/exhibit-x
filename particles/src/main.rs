@@ -1,9 +1,7 @@
 mod ball;
-mod point;
 
 use nannou::prelude::*;
 use ball::Ball;
-use point::Point;
 
 fn main() {
     nannou::app(model).update(update).run();
@@ -15,7 +13,7 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-    let ball = ball::new(Point {x: 0.0, y: 0.0 }, 20.0, Point {x: 1.5, y: -10.0 }, RED);
+    let ball = Ball::new(Vec2::new(0.0, 0.0), 20.0, Vec2::new(1.5, -10.0), RED);
     let _window = app.new_window().view(view).build().unwrap();
     Model { ball, _window }
 }
