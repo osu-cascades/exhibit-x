@@ -19,6 +19,7 @@ fn model(app: &App) -> Model {
         position: Point { x: 0.0, y: 0.0 },
         velocity: Point { x: 1.0, y: -10.0 }, 
         radius: 20.0,
+        color: STEELBLUE,
     };
     let _window = app.new_window().view(view).build().unwrap();
     Model { ball, _window }

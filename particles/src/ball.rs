@@ -1,6 +1,8 @@
 // mod point;
 
 use nannou::prelude::*;
+use nannou::color::rgb::Rgb;
+use nannou::color::encoding::Srgb;
 use std::cmp::max;
 use crate::point::Point;
 
@@ -10,10 +12,13 @@ impl Ball {
     }
 
     pub fn draw(&self, draw: &Draw) {
-        let Ball{ position, radius, .. } = *self;
+        let Ball{ position, radius, color, .. } = *self;
         let Point{ x, y } = position;
 
-        draw.ellipse().radius(radius).color(STEELBLUE).x_y(x, y);
+        draw.ellipse()
+            .radius(radius)
+            .color(color)
+            .x_y(x, y);
     }
 
     fn update_velocity(&self, boundary: Rect) -> Ball {
@@ -52,9 +57,9 @@ impl Ball {
     // }
 }
 
-#[derive(Copy, Clone)]
 pub struct Ball {
     pub position: Point,
     pub velocity: Point,
     pub radius: f32,
+    pub color:  Rgb<Srgb, u8>,
 }
