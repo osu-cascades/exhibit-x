@@ -15,12 +15,7 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-    let ball = Ball {
-        position: Point { x: 0.0, y: 0.0 },
-        velocity: Point { x: 1.0, y: -10.0 }, 
-        radius: 20.0,
-        color: STEELBLUE,
-    };
+    let ball = ball::new(Point {x: 0.0, y: 0.0 }, 20.0, Point {x: 1.5, y: -10.0 }, RED);
     let _window = app.new_window().view(view).build().unwrap();
     Model { ball, _window }
 }
