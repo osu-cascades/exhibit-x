@@ -4,6 +4,7 @@ use nannou::color::encoding::Srgb;
 use nannou::geom::Ellipse;
 use nannou::prelude::geom::Range;
 use nannou::glam::Vec2;
+use nannou::rand::random;
 
 impl Ball {
     pub fn new(position: Vec2, radius: f32, velocity: Vec2, color: Rgb<Srgb, u8>) -> Ball {
@@ -27,6 +28,14 @@ impl Ball {
         }
     }
 
+    pub fn rand_velocity(&self) -> Ball {
+        let velocity = Vec2::new(
+            (random::<f32>() - 0.5) * 4.0,
+            (random::<f32>()) * -20.0
+        );
+        Ball {velocity, ..*self}
+    }
+
     pub fn update(&self, boundary: Rect) -> Ball {
         self.update_velocity(boundary).update_position(boundary)
     }
@@ -43,9 +52,7 @@ impl Ball {
     }
 
     fn update_velocity(&self, boundary: Rect) -> Ball {
-        let Ball{ ellipse, velocity, ..} = self;
-        let rect = ellipse.rect;
-        let mut velocity = velocity.clone();
+        let Ball{ ellipse: Ellipse { rect, .. }, mut velocity, ..} = *self;
 
         if rect.left() <= boundary.left() || rect.right() >= boundary.right() {
             velocity.x *= -1.0; 

@@ -1,7 +1,8 @@
+mod balls;
 mod ball;
 
 use nannou::prelude::*;
-use ball::Ball;
+use balls::Balls;
 
 fn main() {
     nannou::app(model).update(update).run();
@@ -9,24 +10,24 @@ fn main() {
 
 struct Model {
     _window: window::Id,
-    ball: Ball,
+    balls: Balls,
 }
 
 fn model(app: &App) -> Model {
-    let ball = Ball::new(Vec2::new(0.0, 0.0), 20.0, Vec2::new(1.5, -10.0), RED);
+    let balls = Balls::new(100, 5.0);
     let _window = app.new_window().view(view).build().unwrap();
-    Model { ball, _window }
+    Model { balls, _window }
 }
 
 fn update(app: &App, model: &mut Model, _update: Update) {
-    model.ball = model.ball.update(app.window_rect());
+    model.balls = model.balls.update(app.window_rect());
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
-    let Model{ ball, .. } = model;
+    let Model{ balls, .. } = model;
 
-    ball.draw(&draw);
+    balls.draw(&draw);
     draw.background().color(BLACK);
     draw.to_frame(app, &frame).unwrap();
 }
