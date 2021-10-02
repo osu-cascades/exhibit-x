@@ -7,3 +7,4 @@ edition = "2018"
 
 [dependencies]
 nannou = "0.17"
+itertools= "0.7"

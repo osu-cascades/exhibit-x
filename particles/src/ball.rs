@@ -1,8 +1,8 @@
 use nannou::prelude::*;
 use nannou::color::rgb::Rgb;
 use nannou::color::encoding::Srgb;
-use nannou::geom::Ellipse;
-use nannou::prelude::geom::Range;
+use nannou::geom::{Ellipse, Range};
+use nannou::prelude::geom::ellipse::Circumference;
 use nannou::rand::random;
 use crate::person::Person;
 
@@ -31,13 +31,14 @@ impl Ball {
     pub fn rand_velocity(&self) -> Ball {
         let velocity = Point2::new(
             (random::<f32>() - 0.5) * 4.0,
-            (random::<f32>()) * -20.0
+            (random::<f32>()) * -10.0
         );
         Ball {velocity, ..*self}
     }
 
     pub fn update(&self, boundary: Rect, person: &Person) -> Ball {
-        self.update_velocity(boundary, person).update_position(boundary)
+        self.update_velocity(boundary, person)
+            .update_position(boundary)
     }
 
     pub fn draw(&self, draw: &Draw) {
@@ -51,14 +52,24 @@ impl Ball {
             .x_y(x, y);
     }
 
+    pub fn circumference(&self) -> Circumference<f32>{
+        self.ellipse.circumference()
+    }
+
+    pub fn center(&self) -> Point2 {
+        self.ellipse.rect.xy()
+    }
+
     fn update_velocity(&self, boundary: Rect, person: &Person) -> Ball {
         let Ball{ ellipse: Ellipse { rect, .. }, mut velocity, ..} = *self;
+
+        velocity = self.colide(person);
 
         if rect.left() <= boundary.left() || rect.right() >= boundary.right() {
             velocity.x *= -1.0; 
         }
 
-        if rect.bottom() <= boundary.bottom() || self.colide(person) {
+        if rect.bottom() <= boundary.bottom() {
             velocity.y *= -0.9;
         }
 
@@ -67,8 +78,13 @@ impl Ball {
         Ball { velocity, ..*self }
     }
 
-    fn colide(&self, person: &Person) -> bool {
-        self.ellipse.circumference().any(|p| person.contains(Point2::from_slice(&p)))
+
+    fn colide(&self, person: &Person) -> Point2 {
+        match self.ellipse.circumference()
+            .find_map(|p| person.collition_angle(self)){
+            Some(deg) => self.velocity.rotate(deg),
+            None => self.velocity
+        }
     }
 
     fn update_position(&self, boundary: Rect) -> Ball {
