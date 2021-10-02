@@ -37,8 +37,10 @@ impl Ball {
     }
 
     pub fn update(&self, boundary: Rect, person: &Person) -> Ball {
-        self.update_velocity(boundary, person)
-            .update_position(boundary)
+        self.bounce_off_sides(boundary)
+            .colide(person)
+            .apply_gravity()
+            .update_position()
     }
 
     pub fn draw(&self, draw: &Draw) {
@@ -60,42 +62,48 @@ impl Ball {
         self.ellipse.rect.xy()
     }
 
-    fn update_velocity(&self, boundary: Rect, person: &Person) -> Ball {
-        let Ball{ ellipse: Ellipse { rect, .. }, mut velocity, ..} = *self;
+    fn bounce_off_sides(&self, boundary: Rect) -> Ball {
+        let Ball{ ellipse, velocity, .. } = *self;
+        let mut rect = ellipse.rect;
+        let [mut x, mut y] = velocity.to_array();
 
-        velocity = self.colide(person);
-
-        if rect.left() <= boundary.left() || rect.right() >= boundary.right() {
-            velocity.x *= -1.0; 
+        if rect.left() <= boundary.left() {
+            x *= -1.0; 
+            rect = rect.align_left_of(boundary); 
+        } else if rect.right() >= boundary.right() {
+            x *= -1.0;
+            rect = rect.align_right_of(boundary);
         }
 
         if rect.bottom() <= boundary.bottom() {
-            velocity.y *= -0.9;
+            y *= -0.9;
+            rect = rect.align_bottom_of(boundary)
         }
 
-        velocity.y -= 0.4;
+        let ellipse = Ellipse { rect, ..ellipse };
+        let velocity = Vec2::new(x,y);
+        Ball { velocity, ellipse, ..*self}
+    }
 
+    fn apply_gravity(&self) -> Ball {
+        let velocity = Vec2::new(self.velocity.x, self.velocity.y - 0.4);
         Ball { velocity, ..*self }
     }
 
-
-    fn colide(&self, person: &Person) -> Point2 {
-        match self.ellipse.circumference()
-            .find_map(|p| person.collition_angle(self)){
+    fn colide(&self, person: &Person) -> Ball {
+        let velocity = match person.collition_angle(self){
             Some(deg) => self.velocity.rotate(deg),
             None => self.velocity
-        }
+        };
+
+        Ball {velocity, ..*self}
     }
 
-    fn update_position(&self, boundary: Rect) -> Ball {
+    fn update_position(&self) -> Ball {
         let Ball{ ellipse, velocity, .. } = *self;
         let mut rect = ellipse.rect;
 
-        if rect.bottom() <= boundary.bottom() {
-            rect = rect.align_bottom_of(boundary);
-        }
-
-        rect = rect.shift(velocity);
+        rect = rect.shift(velocity);        
         
         let ellipse = Ellipse { rect, ..ellipse };
 
