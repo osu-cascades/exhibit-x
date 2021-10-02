@@ -3,11 +3,11 @@ use nannou::color::rgb::Rgb;
 use nannou::color::encoding::Srgb;
 use nannou::geom::Ellipse;
 use nannou::prelude::geom::Range;
-use nannou::glam::Vec2;
 use nannou::rand::random;
+use crate::person::Person;
 
 impl Ball {
-    pub fn new(position: Vec2, radius: f32, velocity: Vec2, color: Rgb<Srgb, u8>) -> Ball {
+    pub fn new(position: Point2, radius: f32, velocity: Point2, color: Rgb<Srgb, u8>) -> Ball {
         let [x, y] = position.to_array();
         Ball {
             velocity,
@@ -29,15 +29,15 @@ impl Ball {
     }
 
     pub fn rand_velocity(&self) -> Ball {
-        let velocity = Vec2::new(
+        let velocity = Point2::new(
             (random::<f32>() - 0.5) * 4.0,
             (random::<f32>()) * -20.0
         );
         Ball {velocity, ..*self}
     }
 
-    pub fn update(&self, boundary: Rect) -> Ball {
-        self.update_velocity(boundary).update_position(boundary)
+    pub fn update(&self, boundary: Rect, person: &Person) -> Ball {
+        self.update_velocity(boundary, person).update_position(boundary)
     }
 
     pub fn draw(&self, draw: &Draw) {
@@ -51,20 +51,24 @@ impl Ball {
             .x_y(x, y);
     }
 
-    fn update_velocity(&self, boundary: Rect) -> Ball {
+    fn update_velocity(&self, boundary: Rect, person: &Person) -> Ball {
         let Ball{ ellipse: Ellipse { rect, .. }, mut velocity, ..} = *self;
 
         if rect.left() <= boundary.left() || rect.right() >= boundary.right() {
             velocity.x *= -1.0; 
         }
 
-        if rect.bottom() <= boundary.bottom() {
+        if rect.bottom() <= boundary.bottom() || self.colide(person) {
             velocity.y *= -0.9;
         }
 
         velocity.y -= 0.4;
 
         Ball { velocity, ..*self }
+    }
+
+    fn colide(&self, person: &Person) -> bool {
+        self.ellipse.circumference().any(|p| person.contains(Point2::from_slice(&p)))
     }
 
     fn update_position(&self, boundary: Rect) -> Ball {
@@ -85,6 +89,6 @@ impl Ball {
 
 pub struct Ball {
     ellipse: Ellipse,
-    velocity: Vec2,
+    velocity: Point2,
     color:  Rgb<Srgb, u8>,
 }
