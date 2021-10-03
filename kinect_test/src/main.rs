@@ -1,7 +1,7 @@
 use freenectrs::freenect;
 use minifb::{Key, Window, WindowOptions};
 
-const WINDOW_WIDTH: usize = 640 * 2;
+const WINDOW_WIDTH: usize = 640;
 const WINDOW_HEIGHT: usize = 480;
 
 const FRAME_WIDTH: usize = 640;
@@ -25,7 +25,6 @@ fn main() {
 
     // Get rgb and depth stream
     let dstream = device.depth_stream().unwrap();
-    let vstream = device.video_stream().unwrap();
 
     // Start kinect processing thread
     ctx.spawn_process_thread().unwrap();
@@ -56,18 +55,7 @@ fn main() {
                 buffer[pixel_index] = pixel_val;
             }
         }
-        if let Ok((data, _timestamp)) = vstream.receiver.try_recv() {
-            // ... handle rgb data
-            let pixel_data = data
-                .chunks(3)
-                .map(|c| c[2] as u32 | (c[1] as u32) << 8 | (c[0] as u32) << 16);
-            for (i, p) in pixel_data.enumerate() {
-                let pixel_index =
-                    (i / FRAME_WIDTH * WINDOW_WIDTH) + (i % FRAME_WIDTH) + FRAME_WIDTH;
-                buffer[pixel_index] = p;
-            }
-        }
-
+       
         window
             .update_with_buffer(&buffer, WINDOW_WIDTH, WINDOW_HEIGHT)
             .unwrap();
