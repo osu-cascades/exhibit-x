@@ -7,9 +7,13 @@ impl Balls {
         Balls {balls}
     }
 
+    pub fn new_static() -> Balls {
+        let balls = vec![Ball::new(Point2::new(-100.0, 100.0), 5.0, Point2::new(0.0, 0.0), RED), Ball::new(Point2::new(100.0, 100.0), 5.0, Point2::new(0.0, 0.0), RED)];
+        Balls {balls}
+    }
+
     pub fn update(&self, boundary: Rect) -> Balls {
-        let balls = 
-            self
+        let balls = self
             .balls_collide()
             .balls
             .iter()
@@ -27,6 +31,10 @@ impl Balls {
     fn balls_collide(&self) -> Balls {
         let balls = self.balls.iter().map(|b| b.collide_with_balls(&self.balls)).collect();
         Balls { balls }
+    }
+
+    pub fn balls_mut(&mut self) -> &mut Vec<Ball> {
+        &mut self.balls
     }
 }
 
