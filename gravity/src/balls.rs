@@ -8,6 +8,11 @@ impl Balls {
         Balls {balls}
     }
 
+    pub fn new_static() -> Balls {
+        let balls = vec![Ball::new(Point2::new(-100.0, 100.0), 5.0, Point2::new(0.0, 0.0), RED), Ball::new(Point2::new(100.0, 100.0), 5.0, Point2::new(0.0, 0.0), RED)];
+        Balls {balls}
+    }
+
     pub fn update(&self, boundary: Rect, person: &Person) -> Balls {
         let balls = self.balls
             .iter()
@@ -20,6 +25,10 @@ impl Balls {
         for b in self.balls.iter() {
             b.draw(draw);
         }
+    }
+
+    pub fn balls_mut(&mut self) -> &mut Vec<Ball> {
+        &mut self.balls
     }
 }
 

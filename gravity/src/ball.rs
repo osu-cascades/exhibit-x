@@ -4,7 +4,9 @@ use nannou::color::encoding::Srgb;
 use nannou::geom::{Ellipse, Range};
 use nannou::prelude::geom::ellipse::Circumference;
 use nannou::rand::random;
+use crate::Drawable;
 use crate::person::Person;
+use crate::physics::{Massive, Positional};
 
 impl Ball {
     pub fn new(position: Point2, radius: f32, velocity: Point2, color: Rgb<Srgb, u8>) -> Ball {
@@ -85,11 +87,6 @@ impl Ball {
         Ball { velocity, ellipse, ..*self}
     }
 
-    fn apply_gravity(&self) -> Ball {
-        let velocity = Vec2::new(self.velocity.x, self.velocity.y - 0.4);
-        Ball { velocity, ..*self }
-    }
-
     fn colide(&self, person: &Person) -> Ball {
         let velocity = match person.collition_angle(self){
             Some(deg) => self.velocity.rotate(deg),
@@ -115,8 +112,31 @@ impl Ball {
     }
 }
 
+#[derive(Debug)]
 pub struct Ball {
     ellipse: Ellipse,
     velocity: Point2,
     color:  Rgb<Srgb, u8>,
+}
+
+impl Massive for Ball {
+    fn apply_force(&mut self, force: Point2) {
+        self.velocity += force;
+    }
+
+    fn mass(&self) -> f64 {
+        1.4
+    }
+}
+
+impl Drawable for Ball {
+    fn draw(&self, draw_context: &Draw) {
+        self.draw(draw_context);
+    }
+}
+
+impl Positional for Ball {
+    fn position(&self) -> Point2 {
+        self.center()
+    }
 }
