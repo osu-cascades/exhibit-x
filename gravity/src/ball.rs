@@ -2,9 +2,8 @@ use nannou::prelude::*;
 use nannou::color::rgb::Rgb;
 use nannou::color::encoding::Srgb;
 use nannou::geom::{Ellipse, Range};
-use nannou::prelude::geom::ellipse::Circumference;
+// use nannou::prelude::geom::ellipse::Circumference;
 use nannou::rand::random;
-use crate::person::Person;
 
 impl Ball {
     pub fn new(position: Point2, radius: f32, velocity: Point2, color: Rgb<Srgb, u8>) -> Ball {
@@ -36,9 +35,9 @@ impl Ball {
         Ball {velocity, ..*self}
     }
 
-    pub fn update(&self, boundary: Rect, person: &Person) -> Ball {
+    pub fn update(&self, boundary: Rect) -> Ball {
         self.bounce_off_sides(boundary)
-            .colide(person)
+            // .colide(person)
             // .apply_gravity()
             .update_position()
     }
@@ -54,30 +53,33 @@ impl Ball {
             .x_y(x, y);
     }
 
-    pub fn circumference(&self) -> Circumference<f32>{
-        self.ellipse.circumference()
-    }
+    // pub fn circumference(&self) -> Circumference<f32>{
+    //     self.ellipse.circumference()
+    // }
 
     pub fn center(&self) -> Point2 {
         self.ellipse.rect.xy()
     }
 
+    fn radius(&self) -> f32 {
+        self.diameter() / 2.0
+    }
+
+    fn diameter(&self) -> f32 {
+        self.ellipse.rect.w()
+    }
+
     fn bounce_off_sides(&self, boundary: Rect) -> Ball {
         let Ball{ ellipse, velocity, .. } = *self;
-        let mut rect = ellipse.rect;
+        let rect = ellipse.rect;
         let [mut x, mut y] = velocity.to_array();
 
-        if rect.left() <= boundary.left() {
+        if rect.left() <= boundary.left() ||  rect.right() >= boundary.right() {
             x *= -1.0; 
-            rect = rect.align_left_of(boundary); 
-        } else if rect.right() >= boundary.right() {
-            x *= -1.0;
-            rect = rect.align_right_of(boundary);
         }
 
-        if rect.bottom() <= boundary.bottom() {
-            y *= -0.9;
-            rect = rect.align_bottom_of(boundary)
+        if rect.bottom() <= boundary.bottom() || rect.top() >= boundary.top()  {
+            y *= -1.0;
         }
 
         let ellipse = Ellipse { rect, ..ellipse };
@@ -90,18 +92,21 @@ impl Ball {
         Ball { velocity, ..*self }
     }
 
-    fn colide(&self, person: &Person) -> Ball {
-        let velocity = match person.collition_angle(self){
-            Some(deg) => self.velocity.rotate(deg),
-            None => self.velocity
-        };
-
-        Ball {velocity, ..*self}
+    pub fn collide_with_balls(&self, others: &Vec<Ball>) -> Ball {
+        others.iter().fold(*self, |acc, other| acc.collide_with_ball(other))
     }
 
-    // fn colide_with_ball(&self, other: &Ball) -> Ball {
-    //     let pos = 
-    // }
+    fn collide_with_ball(&self, other: &Ball) -> Ball{
+        let d_pos =  self.center() - other.center();
+        let distance = (d_pos.x * d_pos.x + d_pos.y * d_pos.y).sqrt();
+        let min_dist = other.radius() + self.radius();
+        if distance < min_dist && self != other && d_pos.x != 0.0 && d_pos.y != 0.0 {
+            let velocity = self.velocity - (((self.velocity - other.velocity) * d_pos)/ (d_pos * d_pos)) * d_pos;
+            Ball { velocity, ..*self }
+        } else {
+            Ball { ..*self }
+        }
+    }
 
     fn update_position(&self) -> Ball {
         let Ball{ ellipse, velocity, .. } = *self;
@@ -115,6 +120,7 @@ impl Ball {
     }
 }
 
+#[derive(PartialEq, Copy, Clone)]
 pub struct Ball {
     ellipse: Ellipse,
     velocity: Point2,
