@@ -32,7 +32,7 @@ impl Model {
 
 fn init_model(app: &App) -> Model {
     let balls = init_balls();
-    let person = Person::new(vec![Point2::new(-50.0,-100.0), Point2::new(50.0,-100.0), Point2::new(50.0,-50.0), Point2::new(0.0,0.0)]);
+    let person = Person::new(vec![Point2::new(-50.0,-100.2), Point2::new(50.0,-100.0), Point2::new(50.0,-50.0), Point2::new(0.0,0.0)]);
 
     let _window = app.new_window().view(view).build().unwrap();
     Model { person, balls, _window }
@@ -44,11 +44,9 @@ fn init_balls() -> Balls {
 }
 
 fn update(app: &App, model: &mut Model, _update: Update) {
-    let Model { balls, person, .. } = model;
-
-    apply_gravity(balls.balls_mut());
+    apply_gravity(model.balls.balls_mut());
     
-    model.balls = balls.update(app.window_rect());
+    model.balls = model.balls.update(app.window_rect());
 
     if app.keys.down.contains(&Key::R){
         model.reset();
