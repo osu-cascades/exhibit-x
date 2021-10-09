@@ -7,16 +7,19 @@ impl Balls {
     }
 
     pub fn new_static() -> Balls {
-        let balls = vec![Ball::new(Point2::new(-100.1, 100.1), 10.0, Point2::new(0.0, 0.0), RED), Ball::new(Point2::new(100.0, 100.0), 10.0, Point2::new(0.0, 0.0), BLUE)];
+        let balls = vec![
+            Ball::new(Point2::new(-100.1, 100.1), 10.0, Point2::new(0.0, 0.0), RED),
+            Ball::new(Point2::new(100.0, 100.0), 10.0, Point2::new(0.0, 0.0), BLUE),
+            Ball::new(Point2::new(100.0, -100.0), 10.0, Point2::new(0.0, 0.0), YELLOW)           
+            ];
         Balls {balls}
     }
 
-    pub fn update(&mut self, boundary: Rect) -> Balls {
-        let mut balls = self.balls_collide().balls;
-        for b in &mut balls {
+    pub fn update(&mut self, boundary: Rect) {
+        self.balls_collide();
+        for b in &mut self.balls {
             b.update(boundary);
         }
-        Balls {balls}
     }
 
     pub fn draw(&self, draw: &Draw) {
@@ -25,9 +28,11 @@ impl Balls {
         }
     }
 
-    fn balls_collide(&self) -> Balls {
-        let balls = self.balls.iter().map(|b| b.collide_with_balls(&self.balls)).collect();
-        Balls { balls }
+    fn balls_collide(&mut self) {
+        let balls_clone = self.balls.clone(); 
+        for b in &mut self.balls {
+            b.collide_with_balls(&balls_clone);
+        }
     }
 
     pub fn balls_mut(&mut self) -> &mut Vec<Ball> {

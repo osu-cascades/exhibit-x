@@ -67,19 +67,19 @@ impl Ball {
         self.velocity = Vec2::new(x,y);
     }
 
-    pub fn collide_with_balls(&self, others: &Vec<Ball>) -> Ball {
-        others.iter().fold(*self, |acc, other| acc.collide_with_ball(other))
+    pub fn collide_with_balls(&mut self, others: &Vec<Ball>) {
+        for o in others {
+            self.collide_with_ball(o);
+        }
     }
 
-    fn collide_with_ball(&self, other: &Ball) -> Ball{
+    fn collide_with_ball(&mut self, other: &Ball){
         let d_pos =  self.center() - other.center();
         let distance = (d_pos.x * d_pos.x + d_pos.y * d_pos.y).sqrt();
         let min_dist = other.radius() + self.radius();
         if distance < min_dist && self != other && d_pos.x != 0.0 && d_pos.y != 0.0 {
-            let velocity = self.velocity - (((self.velocity - other.velocity) * d_pos)/ (d_pos * d_pos)) * d_pos;
-            Ball { velocity, ..*self }
-        } else {
-            Ball { ..*self }
+            // maybe add mass at some point
+            self.velocity = self.velocity - (((self.velocity - other.velocity) * d_pos)/ (d_pos * d_pos)) * d_pos;
         }
     }
 

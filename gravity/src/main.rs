@@ -39,7 +39,7 @@ fn init_balls() -> Balls {
 fn update(app: &App, model: &mut Model, _update: Update) {
     apply_gravity(model.balls.balls_mut());
     
-    model.balls = model.balls.update(app.window_rect());
+    model.balls.update(app.window_rect());
 
     if app.keys.down.contains(&Key::R){
         model.reset();
