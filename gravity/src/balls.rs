@@ -2,8 +2,7 @@ use nannou::prelude::*;
 use crate::ball::Ball;
 
 impl Balls {
-    pub fn new(amount: i32, radiuses: f32) -> Balls {
-        let balls = (0..amount).map(|i| Ball::new(Point2::new(0.0 + 60.0 * i as f32, 250.0), radiuses, Point2::new(1.5, -10.0), RED).rand_velocity()).collect();
+    pub fn new(balls: Vec<Ball>) -> Balls {
         Balls {balls}
     }
 

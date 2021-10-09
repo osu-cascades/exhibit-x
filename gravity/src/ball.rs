@@ -2,10 +2,7 @@ use nannou::prelude::*;
 use nannou::color::rgb::Rgb;
 use nannou::color::encoding::Srgb;
 use nannou::geom::{Ellipse, Range};
-use nannou::prelude::geom::ellipse::Circumference;
-use nannou::rand::random;
 use crate::Drawable;
-use crate::person::Person;
 use crate::physics::{Massive, Positional};
 
 impl Ball {
@@ -30,18 +27,8 @@ impl Ball {
         }
     }
 
-    pub fn rand_velocity(&self) -> Ball {
-        let velocity = Point2::new(
-            (random::<f32>() - 0.5) * 4.0,
-            (random::<f32>()) * -10.0
-        );
-        Ball {velocity, ..*self}
-    }
-
     pub fn update(&self, boundary: Rect) -> Ball {
         self.bounce_off_sides(boundary)
-            // .colide(person)
-            // .apply_gravity()
             .update_position()
     }
 
@@ -54,10 +41,6 @@ impl Ball {
             .radius(rect.w())
             .color(color)
             .x_y(x, y);
-    }
-
-    pub fn circumference(&self) -> Circumference<f32>{
-        self.ellipse.circumference()
     }
 
     pub fn center(&self) -> Point2 {
@@ -86,25 +69,15 @@ impl Ball {
         Ball { velocity, ellipse, ..*self}
     }
 
-    fn colide(&self, person: &Person) -> Ball {
-        let velocity = match person.collition_angle(self){
-            Some(deg) => self.velocity.rotate(deg),
-            None => self.velocity
-        };
-
-        Ball {velocity, ..*self}
-    }
-
     pub fn collide_with_balls(&self, others: &Vec<Ball>) -> Ball {
         others.iter().fold(*self, |acc, other| acc.collide_with_ball(other))
     }
 
     fn collide_with_ball(&self, other: &Ball) -> Ball{
-        let mut d_pos =  self.center() - other.center();
+        let d_pos =  self.center() - other.center();
         let distance = (d_pos.x * d_pos.x + d_pos.y * d_pos.y).sqrt();
         let min_dist = other.radius() + self.radius();
         if distance < min_dist && self != other && d_pos.x != 0.0 && d_pos.y != 0.0 {
-            println!("colide");
             let velocity = self.velocity - (((self.velocity - other.velocity) * d_pos)/ (d_pos * d_pos)) * d_pos;
             Ball { velocity, ..*self }
         } else {

@@ -24,7 +24,7 @@ impl Attractor {
 }
 
 impl Massive for Attractor {
-    fn apply_force(&mut self, force: Point2) {
+    fn apply_force(&mut self, _force: Point2) {
         () // Attractors cannot be moved by gravity
     }
 
