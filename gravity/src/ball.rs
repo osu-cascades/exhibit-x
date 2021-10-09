@@ -27,9 +27,9 @@ impl Ball {
         }
     }
 
-    pub fn update(&self, boundary: Rect) -> Ball {
-        self.bounce_off_sides(boundary)
-            .update_position()
+    pub fn update(&mut self, boundary: Rect) {
+        self.bounce_off_sides(boundary);
+        self.update_position();
     }
 
     pub fn draw(&self, draw: &Draw) {
@@ -51,8 +51,8 @@ impl Ball {
         self.ellipse.rect.w()
     }
 
-    fn bounce_off_sides(&self, boundary: Rect) -> Ball {
-        let Ball{ ellipse, velocity, .. } = *self;
+    fn bounce_off_sides(&mut self, boundary: Rect) {
+        let Ball{ ellipse, velocity, .. } = self;
         let rect = ellipse.rect;
         let [mut x, mut y] = velocity.to_array();
 
@@ -64,9 +64,7 @@ impl Ball {
             y *= -1.0;
         }
 
-        let ellipse = Ellipse { rect, ..ellipse };
-        let velocity = Vec2::new(x,y);
-        Ball { velocity, ellipse, ..*self}
+        self.velocity = Vec2::new(x,y);
     }
 
     pub fn collide_with_balls(&self, others: &Vec<Ball>) -> Ball {
@@ -85,15 +83,10 @@ impl Ball {
         }
     }
 
-    fn update_position(&self) -> Ball {
-        let Ball{ ellipse, velocity, .. } = *self;
-        let mut rect = ellipse.rect;
+    fn update_position(&mut self) {
+        let Ball{ ellipse, velocity, .. } = self;
 
-        rect = rect.shift(velocity);        
-        
-        let ellipse = Ellipse { rect, ..ellipse };
-
-        Ball { ellipse, ..*self}
+        self.ellipse.rect = ellipse.rect.shift(*velocity);        
     }
 }
 

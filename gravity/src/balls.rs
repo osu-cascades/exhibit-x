@@ -11,13 +11,11 @@ impl Balls {
         Balls {balls}
     }
 
-    pub fn update(&self, boundary: Rect) -> Balls {
-        let balls = self
-            .balls_collide()
-            .balls
-            .iter()
-            .map(|b| (*b).update(boundary))
-            .collect();
+    pub fn update(&mut self, boundary: Rect) -> Balls {
+        let mut balls = self.balls_collide().balls;
+        for b in &mut balls {
+            b.update(boundary);
+        }
         Balls {balls}
     }
 
