@@ -8,9 +8,9 @@ impl Balls {
 
     pub fn new_static() -> Balls {
         let balls = vec![
-            Ball::new(Point2::new(-100.1, 100.1), 10.0, Point2::new(0.0, 0.0), RED),
+            Ball::new(Point2::new(-100.0, 100.0), 10.0, Point2::new(0.0, 0.0), RED),
             Ball::new(Point2::new(100.0, 100.0), 10.0, Point2::new(0.0, 0.0), BLUE),
-            Ball::new(Point2::new(100.0, -100.0), 10.0, Point2::new(0.0, 0.0), YELLOW)           
+            Ball::new(Point2::new(100.0, 0.0), 10.0, Point2::new(0.0, 0.0), YELLOW),           
             ];
         Balls {balls}
     }

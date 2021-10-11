@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 freenectrs = "0.1.0"
-# minifb = "0.19.3"
+nannou = "0.17"

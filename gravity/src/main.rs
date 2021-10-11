@@ -4,6 +4,7 @@ mod physics;
 
 use nannou::prelude::*;
 use balls::Balls;
+use ball::Ball;
 use physics::apply_gravity;
 
 pub trait Drawable {
@@ -34,6 +35,13 @@ fn init_model(app: &App) -> Model {
 
 fn init_balls() -> Balls {
     Balls::new_static()
+    // let mut balls = Vec::new();
+    // for x in -5..5 {
+    //     for y in -5..5 {
+    //         balls.push(Ball::new(Point2::new(50.0 * x as f32, 50.0 * y as f32), 10.0, Point2::new(0.0, 0.0), RED));
+    //     }
+    // }
+    // Balls::new(balls)
 }
 
 fn update(app: &App, model: &mut Model, _update: Update) {

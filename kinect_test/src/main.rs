@@ -1,7 +1,4 @@
 use freenectrs::freenect;
-use minifb::{Key, MouseButton, MouseMode, Window, WindowOptions};
-
-const WINDOW_WIDTH: usize = 640;
 const WINDOW_HEIGHT: usize = 480;
 
 const FRAME_WIDTH: usize = 640;
