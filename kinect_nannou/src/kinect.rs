@@ -29,6 +29,8 @@ impl<'a, 'b> Kinect<'a, 'b> {
         let dstream = device.depth_stream().unwrap();
         let vstream = device.video_stream().unwrap();
 
+        ctx.spawn_process_thread().unwrap();
+
         Kinect {ctx, device, dstream, vstream}
     }
 }
