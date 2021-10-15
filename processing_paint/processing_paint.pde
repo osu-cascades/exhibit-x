@@ -11,8 +11,8 @@ float angle;
 void setup() {
   kinect = new Kinect(this);
   kinect.initDepth();
-  paintSurface = createImage(1280, 960, ARGB);
-  size(1280, 960);
+  paintSurface = createImage(1920, 1440, ARGB);
+  size(1920, 1440);
   angle = kinect.getTilt();
 }
 
@@ -22,7 +22,7 @@ void draw() {
   paintSurface.loadPixels();
   
   for(int i = 0; i < depth_data.length; i++) {
-    int pixel_color = color_at_doubled(paintSurface, i);
+    int pixel_color = color_at_tripled(paintSurface, i);
     if(depth_data[i] < 600 && depth_data[i] != 0) {
       pixel_color = color(#006699, 191);
     }
@@ -32,7 +32,7 @@ void draw() {
     }
     pixel_color &= 0xFFFFFF;
     pixel_color |= alpha << 24;
-    double_pixels(paintSurface, i, pixel_color);
+    triple_pixels(paintSurface, i, pixel_color);
   }
   paintSurface.updatePixels();
   image(paintSurface, 0, 0);
@@ -51,14 +51,17 @@ void keyPressed() {
   }
 }
 
-int color_at_doubled(PImage paintSurface, int pixel_index){
-  return paintSurface.pixels[(pixel_index % (paintSurface.width/2)) * 2 + paintSurface.width * 2 * (pixel_index/(paintSurface.width/2))];
+void triple_pixels(PImage paintSurface, int pixel_index, int pixel_color){
+  int i = tripled_index(paintSurface, pixel_index);
+  for(int x=0; x < 3; x++)
+    for(int y=0; y <3; y++)
+       paintSurface.pixels[i + x + paintSurface.width*y] = pixel_color;
 }
 
-void double_pixels(PImage paintSurface, int pixel_index, int pixel_color){
-  int i = (pixel_index % (paintSurface.width/2)) * 2 + paintSurface.width * 2 * (pixel_index/(paintSurface.width/2));
-   paintSurface.pixels[i] = pixel_color;
-   paintSurface.pixels[i + 1] = pixel_color;
-   paintSurface.pixels[i + paintSurface.width] = pixel_color;
-   paintSurface.pixels[i + paintSurface.width + 1] = pixel_color;
+int color_at_tripled(PImage paintSurface, int pixel_index){
+  return paintSurface.pixels[tripled_index(paintSurface, pixel_index)];
+}
+
+int tripled_index(PImage paintSurface, int pixel_index){
+  return (pixel_index % (paintSurface.width/3)) * 3 + paintSurface.width * 3 * (pixel_index/(paintSurface.width/3));
 }
