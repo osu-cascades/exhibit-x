@@ -14,17 +14,20 @@ void setup() {
   paintSurface = createImage(WIDTH, HEIGHT, ARGB);
   kinect = new Kinect(this);
   kinect.initDepth();
-  //kinect.initVideo();
+  kinect.initVideo();
   kinect.setTilt(15);
 }
 
 
 void draw() {
   background(0);
+  PImage videoImg = kinect.getVideoImage();
+  videoImg.loadPixels();
   paintSurface.loadPixels();
   int[] depth_data = kinect.getRawDepth();
   for(int i = 0; i < depth_data.length; i++) {
-     int pixel_color = 0;
+     int pixel_color = videoImg.pixels[i];
+     //int pixel_color = 0;
      if(depth_data[i] < 900)
        pixel_color = COLORS[((depth_data[i] + offset) % (COLORS.length * COLORS.length))/COLORS.length];
      triple_pixels(paintSurface, i, pixel_color);
