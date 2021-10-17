@@ -6,9 +6,10 @@ PImage paintSurface;
 static final int WIDTH = 1920;
 static final int HEIGHT = 1440;
 static final int STRIP_SIZE = 5;
-static final int DEPTH_THRESHOLD = 9000;
+static final int DEPTH_THRESHOLD = 900;
+int LINE_SIZE = 2;
 int color_range = 50;
-static final int OFFSET_INCREASE = 3;
+static final int OFFSET_INCREASE = 0;
 int offset = 0;
 float angle;
 
@@ -18,30 +19,44 @@ void setup() {
   paintSurface = createImage(WIDTH, HEIGHT, ARGB);
   kinect = new Kinect(this);
   kinect.initDepth();
-  kinect.initVideo();
   angle = kinect.getTilt();
-  colorMode(HSB, color_range, 1.0, 1.0);
 }
 
 
 void draw() {
   background(0);
-  PImage videoImg = kinect.getVideoImage();
-  videoImg.loadPixels();
+  draw_background();
+  draw_forground();
+}
+
+void draw_background(){
+   colorMode(HSB, color_range, 1.0, 1.0);
   paintSurface.loadPixels();
   int[] depth_data = kinect.getRawDepth();
   for(int i = 0; i < depth_data.length; i++) {
-     int pixel_color = videoImg.pixels[i];
-     //int pixel_color = 0;
-     if(depth_data[i] < DEPTH_THRESHOLD)
-       pixel_color = color((depth_data[i] + offset) % color_range, 1.0, 1.0);
-     triple_pixels(paintSurface, i, pixel_color);
+     triple_pixels(paintSurface, i, color((depth_data[i] + offset) % color_range, 1.0, 1.0));
   }
   paintSurface.updatePixels();
   image(paintSurface, 0, 0);
   offset = offset + OFFSET_INCREASE % color_range;
-  text("color range: " + color_range, 10, 10);
 }
+
+void draw_forground() {
+  colorMode(RGB, 255, 255,255,255);
+  paintSurface.loadPixels();
+  int[] depth_data = kinect.getRawDepth();
+  for (int i = 0; i < depth_data.length; i+=LINE_SIZE) {
+    int a = depth_data[i] % 3 != 0 ? 255 : 0; 
+    int c = (((i+offset)/LINE_SIZE) % 2 == 0 ? color(0, 0, 0, a) : color(255,255,255, a));
+    if(depth_data[i] > DEPTH_THRESHOLD)
+      c = (((i+offset)/LINE_SIZE) % 2 == 0 ? color(0, 0, 0, 255) : color(255,255,255, 255));
+    for(int l=0; l<LINE_SIZE; l++)
+      triple_pixels(paintSurface, i+l, c);
+  }
+  paintSurface.updatePixels();
+  image(paintSurface, 0, 0);
+}
+
 
 void triple_pixels(PImage paintSurface, int pixel_index, int pixel_color){
   int i = (pixel_index % (paintSurface.width/3)) * 3 + paintSurface.width * 3 * (pixel_index/(paintSurface.width/3));
