@@ -5,7 +5,7 @@ Kinect kinect;
 PImage paintSurface;
 static final int WIDTH = 1920;
 static final int HEIGHT = 1440;
-static final int[] COLORS = {#FF0000, #00FF00, #0000FF};
+static final int[] COLORS = {#EF7C8E, #FAE8E0, #B6E2D3, #D8A7B1};
 static final int STRIP_SIZE = 5;
 int offset = 0;
 
@@ -34,7 +34,6 @@ void draw() {
   }
   paintSurface.updatePixels();
   image(paintSurface, 0, 0);
-  fill(255);
   //offset = offset + 1 % COLORS.length;
 }
 
