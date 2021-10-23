@@ -5,7 +5,7 @@ Kinect kinect;
 PFont monoFont;
 static final int WIDTH = 1920;
 static final int HEIGHT = 1440;
-static final int TEXT_HIEGHT = 20;
+static final int TEXT_HIEGHT = 25;
 static final int TEXT_WIDTH = (int)(TEXT_HIEGHT * 0.6);
 static final String DEPTH_CHARS = " .,-~:;!*=#$@";
 static final int DEPTH_LEVELS = 50;
