@@ -7,9 +7,11 @@ static final int WIDTH = 1920;
 static final int HEIGHT = 1080;
 static final int DEPTH_THRESHOLD = 900;
 static final int DIAMETER = 120;
+static final int FACE_WIDTH = DIAMETER*3;
 //static final int[] COLORS = {#fbfc18, #f08e00, #ea599e, #b055a2, #37aae1, #52f460};
 static final int[] COLORS = {#BCECE0, #36EEE0, #F652A0, #4C5270};
 static final int EYE_NUM = COLORS.length;
+//static final int EYE_NUM = 25;
 
 void setup() {
   size(1920, 1080);
@@ -26,10 +28,10 @@ void draw() {
   int[] depth_data = kinect.getRawDepth();
   int[] target = centroid(depth_data);
   //int[] target = {mouseX, mouseY};
-  for(int x=0; x < WIDTH/DIAMETER; x++)
-    for(int y=0; y < HEIGHT/DIAMETER; y++)
-      eye((x+0.5)*DIAMETER, (y+0.5)*DIAMETER, target);
-  //imgDisp(depth_data);
+  for(int x=0; x < WIDTH/FACE_WIDTH; x++)
+    for(int y=0; y < HEIGHT/FACE_WIDTH; y++)
+      face((x+0.25*x)*FACE_WIDTH, (y+0.25)*FACE_WIDTH, target);
+  imgDisp(depth_data);
 }
 
 void imgDisp(int[] depth_data){
@@ -45,7 +47,19 @@ void imgDisp(int[] depth_data){
   image(paintSurface, 0, 0);
 }
 
+void face(float x, float y, int[] target){
+    eye(x, y, target);
+    eye(x+DIAMETER*2, y, target);
+    fill(color(255,0,0));
+    arc(x+DIAMETER, y+DIAMETER , DIAMETER*3, DIAMETER*(2 - dist(x+DIAMETER, y+DIAMETER, target)/500), 0, PI);
+}
+
+float dist(float x, float y, int[] p){
+  return (float) Math.sqrt(Math.pow(x - p[0], 2) + Math.pow(y - p[1], 2));
+}
+
 void eye(float x, float y, int[] target){
+  //fill(255);
   for(int i=0; i<EYE_NUM; i++){
     float d = i*(DIAMETER/EYE_NUM);
     fill(COLORS[i]);
