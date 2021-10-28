@@ -12,11 +12,12 @@ void setup() {
   size(640, 480);
   kinect = new Kinect(this);
   kinect.initVideo();
+  opencv = new OpenCV(this,640, 480);
+  opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE); 
 }
 
 void draw() {
-  opencv = new OpenCV(this, kinect.getVideoImage());
-  opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);  
+  opencv.loadImage(kinect.getVideoImage());
   faces = opencv.detect();
   image(opencv.getInput(), 0, 0);
 
