@@ -6,7 +6,7 @@ PImage paintSurface;
 static final int WIDTH = 1920;
 static final int HEIGHT = 1440;
 static final int STRIP_SIZE = 5;
-static final int DEPTH_THRESHOLD = 900;
+static final int DEPTH_THRESHOLD = 50;
 int LINE_SIZE = 2;
 int color_range = 50;
 static final int OFFSET_INCREASE = 0;

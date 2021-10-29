@@ -16,9 +16,11 @@ float angle;
 
 void setup() {
   size(1920, 1440);
+  frameRate(10);
   for(int i=0; i<past.length; i++)
     past[i] = createImage(WIDTH, HEIGHT, ARGB);
   kinect = new Kinect(this);
+  kinect.enableMirror(true);
   kinect.initDepth();
   angle = kinect.getTilt();
 }

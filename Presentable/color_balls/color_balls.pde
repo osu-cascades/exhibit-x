@@ -4,7 +4,7 @@ import org.openkinect.processing.*;
 Kinect kinect;
 static final int WIDTH = 1920;
 static final int HEIGHT = 1440;
-static final int BALL_DAIMETER = 15;
+static final int BALL_DAIMETER = 20;
 float angle;
 
 

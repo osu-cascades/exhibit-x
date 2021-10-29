@@ -1,33 +1,40 @@
 import processing.video.*;
-Movie myMovie;
+import org.openkinect.freenect.*;
+import org.openkinect.processing.*;
+
+Movie[] movies = new Movie[3];
+Kinect kinect;
 PImage paintSurface;
+static final int DEPTH_THRESHOLD = 300;
 
 void setup() {
-  size(1920, 1800);
-  myMovie = new Movie(this, "Serial Experiments Lain Trailer.mp4");
-  myMovie.loop();
+  size(1920, 1080);
+  for(int i=0; i<movies.length; i++){
+    movies[i] = new Movie(this, movies.length - 1- i + ".mp4");
+    movies[i].loop();
+  }
+  kinect = new Kinect(this);
+  kinect.initDepth();
   paintSurface = createImage(width, height, ARGB);
 }
 
 void draw() {
-  tint(255, 20);
-  myMovie.loadPixels();
+  int[] depthData = kinect.getRawDepth();
   paintSurface.loadPixels();
-  for(int i=0; i<myMovie.pixels.length; i++)
-    triple_pixels(paintSurface, i, myMovie.pixels[0]); 
+  for(int i=0; i<paintSurface.pixels.length; i++){
+    float x = ((float)(i%paintSurface.width))/paintSurface.width;
+    float y = ((float)(i/paintSurface.width))/paintSurface.height;
+    int depth = depthData[(int)(x*640) + 640 * ((int) (y * 480))];
+    paintSurface.pixels[i] = (int)random(0,2) == 0 ? color(255) : color(0);
+    for(int m=movies.length-1; m>=0; m--)
+      if(depth < 300 + (m+1)*DEPTH_THRESHOLD)
+         paintSurface.pixels[i] = movies[m].get((int)(x * movies[m].width), (int)(y * movies[m].height));  
+  }
   paintSurface.updatePixels();
-  image(paintSurface, 0, 0, width, height);
-  //System.out.println(myMovie.width);
+  image(paintSurface, 0, 0);
 }
 
 // Called every time a new frame is available to read
 void movieEvent(Movie m) {
   m.read();
-}
-
-void triple_pixels(PImage paintSurface, int pixel_index, int pixel_color){
-  int i = (pixel_index % (paintSurface.width/3)) * 3 + paintSurface.width * 3 * (pixel_index/(paintSurface.width/3));
-  for(int x=0; x < 3; x++)
-    for(int y=0; y <3; y++)
-       paintSurface.pixels[i + x + paintSurface.width*y] = pixel_color;
 }
