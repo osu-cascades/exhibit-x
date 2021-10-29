@@ -7,8 +7,8 @@ static final int WIDTH = 1920;
 static final int HEIGHT = 1440;
 static final int STRIP_SIZE = 5;
 static final int DEPTH_THRESHOLD = 9000;
-int color_range = 50;
-static final int OFFSET_INCREASE = 3;
+int color_range = 500;
+static final int OFFSET_INCREASE = 0;
 int offset = 0;
 float angle;
 

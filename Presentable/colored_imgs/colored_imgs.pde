@@ -27,15 +27,15 @@ void setup() {
 
 void draw() {  
   PImage img = kinect.getVideoImage();
-  //x++;
-  //if(x > WIDTH/IMG_WIDTH){
-  // x=0;
-  // y++;
-  // if(y > HEIGHT/IMG_HEIGHT) y=0;
-  //}
-  for(x=0; x<WIDTH/IMG_WIDTH; x++)
-    for(y=0; y<HEIGHT/IMG_HEIGHT; y++){
+  x++;
+  if(x > WIDTH/IMG_WIDTH){
+   x=0;
+   y++;
+   if(y > HEIGHT/IMG_HEIGHT) y=0;
+  }
+  //for(x=0; x<WIDTH/IMG_WIDTH; x++)
+  //  for(y=0; y<HEIGHT/IMG_HEIGHT; y++){
       tint(colorImg.get((int)((((float)x*IMG_WIDTH)/WIDTH)*colorImg.width),(int)((((float)y*IMG_HEIGHT)/HEIGHT)*colorImg.height)), 255);
        image(img, x*IMG_WIDTH, y*IMG_HEIGHT, IMG_WIDTH, IMG_HEIGHT);
-    }
+    //}
 }
