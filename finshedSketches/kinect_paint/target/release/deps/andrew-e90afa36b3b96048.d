@@ -1,0 +1,12 @@
+/home/colin/Devel/capstone/Exhibit-X/kinect_paint/target/release/deps/andrew-e90afa36b3b96048.rmeta: /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/lib.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/line.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/shapes/mod.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/shapes/rectangle.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/text/mod.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/text/fontconfig.rs
+
+/home/colin/Devel/capstone/Exhibit-X/kinect_paint/target/release/deps/libandrew-e90afa36b3b96048.rlib: /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/lib.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/line.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/shapes/mod.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/shapes/rectangle.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/text/mod.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/text/fontconfig.rs
+
+/home/colin/Devel/capstone/Exhibit-X/kinect_paint/target/release/deps/andrew-e90afa36b3b96048.d: /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/lib.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/line.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/shapes/mod.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/shapes/rectangle.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/text/mod.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/text/fontconfig.rs
+
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/lib.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/line.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/shapes/mod.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/shapes/rectangle.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/text/mod.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/andrew-0.3.1/src/text/fontconfig.rs:

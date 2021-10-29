@@ -1,0 +1,11 @@
+/home/colin/Devel/capstone/Exhibit-X/kinect_paint/target/debug/deps/codespan_reporting-4cc5aa1b18f99df9.rmeta: /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/lib.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/diagnostic.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/files.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term/config.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term/renderer.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term/views.rs
+
+/home/colin/Devel/capstone/Exhibit-X/kinect_paint/target/debug/deps/codespan_reporting-4cc5aa1b18f99df9.d: /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/lib.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/diagnostic.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/files.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term/config.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term/renderer.rs /home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term/views.rs
+
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/lib.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/diagnostic.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/files.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term/config.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term/renderer.rs:
+/home/colin/.cargo/registry/src/github.com-1ecc6299db9ec823/codespan-reporting-0.11.1/src/term/views.rs:
