@@ -6,9 +6,9 @@ void setup() {
   
   planetPropagator = new PlanetPositionPropagator();
   
-  float div_size = ((width) * 0.6) / 8;
+  float div_size = ((height) * 0.95) / 8;
   
-  size(640,480);
+  size(1920,1080);
   background(0);
   
   translate(width/2, height/2);
@@ -49,6 +49,10 @@ color planetColor(Planet p) {
     return color(255, 157, 0);
   case SATURN:
     return color(194, 143, 62);
+  case URANUS:
+    return color(163, 154, 217);
+  case NEPTUNE:
+    return color(47, 41, 82);
   default:
     return color(0);
   }
