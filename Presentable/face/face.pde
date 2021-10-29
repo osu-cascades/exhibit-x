@@ -31,7 +31,7 @@ void draw() {
   for(int x=0; x < WIDTH/FACE_WIDTH; x++)
     for(int y=0; y < HEIGHT/FACE_WIDTH; y++)
       face((x+0.25*x)*FACE_WIDTH, (y+0.25)*FACE_WIDTH, target);
-  imgDisp(depth_data);
+  //imgDisp(depth_data);
 }
 
 void imgDisp(int[] depth_data){
