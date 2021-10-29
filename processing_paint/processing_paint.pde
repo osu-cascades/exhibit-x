@@ -11,31 +11,33 @@ float angle;
 void setup() {
   kinect = new Kinect(this);
   kinect.initDepth();
-  paintSurface = createImage(1920, 1440, ARGB);
-  size(1920, 1440);
+  size(1920, 1080);
+  paintSurface = createImage(width, height, ARGB);
   angle = kinect.getTilt();
 }
 
 void draw() {
   background(0);
   int[] depth_data = kinect.getRawDepth();
+
   paintSurface.loadPixels();
   
-  for(int i = 0; i < depth_data.length; i++) {
-    int pixel_color = color_at_tripled(paintSurface, i);
-    if(depth_data[i] < 600 && depth_data[i] != 0) {
-      pixel_color = color(#006699, 191);
+  for(int i = 0; i < paintSurface.pixels.length; i++) {
+    PVector currentPixel = indexToVec(i, width);
+    int depthPoint = getDepthAtWindowPixel(depth_data, currentPixel);
+    if(depthPoint < 600 && depthPoint != 0) {
+      paintSurface.pixels[i] = color(#006699, 191);
     }
-    int alpha = (int) alpha(pixel_color);
+    int alpha = (int) alpha(paintSurface.pixels[i]);
     if(alpha > 0) {
       alpha -= 1;    
     }
-    pixel_color &= 0xFFFFFF;
-    pixel_color |= alpha << 24;
-    triple_pixels(paintSurface, i, pixel_color);
+    paintSurface.pixels[i] &= 0xFFFFFF;
+    paintSurface.pixels[i] |= alpha << 24;
   }
   paintSurface.updatePixels();
   image(paintSurface, 0, 0);
+ 
 }
 
 void keyPressed() {
@@ -51,17 +53,19 @@ void keyPressed() {
   }
 }
 
-void triple_pixels(PImage paintSurface, int pixel_index, int pixel_color){
-  int i = tripled_index(paintSurface, pixel_index);
-  for(int x=0; x < 3; x++)
-    for(int y=0; y <3; y++)
-       paintSurface.pixels[i + x + paintSurface.width*y] = pixel_color;
+int vecToIndex(PVector vec, int bufWidth) {
+  return ((int) vec.y * bufWidth) + (int) vec.x;
 }
 
-int color_at_tripled(PImage paintSurface, int pixel_index){
-  return paintSurface.pixels[tripled_index(paintSurface, pixel_index)];
+PVector indexToVec(int index, int bufWidth) {
+  int x = index % bufWidth;
+  int y = index / bufWidth;
+  return new PVector(x, y);
 }
 
-int tripled_index(PImage paintSurface, int pixel_index){
-  return (pixel_index % (paintSurface.width/3)) * 3 + paintSurface.width * 3 * (pixel_index/(paintSurface.width/3));
+int getDepthAtWindowPixel(int[] depthData, PVector pixel) {
+  float normalizedX = pixel.x / width;
+  float normalizedY = pixel.y / height;
+  PVector depthLocation = new PVector(640.0 * normalizedX, 480.0 * normalizedY);
+  return depthData[vecToIndex(depthLocation, 640)];
 }
