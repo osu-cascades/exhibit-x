@@ -1,10 +1,18 @@
 import java.time.*;
 
 PlanetPositionPropagator planetPropagator;
+DSNManager dsn;
 
 void setup() {
   
   planetPropagator = new PlanetPositionPropagator();
+  dsn = new DSNManager("config.xml");
+  
+  ArrayList<Signal> signals = dsn.getActiveSignals();
+  for(Signal signal : signals) {
+    println(signal.getName());
+  }
+  
   
   float div_size = ((height) * 0.95) / 8;
   
@@ -29,7 +37,7 @@ void setup() {
   }
   fill(#fcba03);
   circle(0, 0, 20.0);
-}
+  }
 
 PVector polarToCartesian(float theta, float radius) {
     return new PVector(radius * cos(theta), radius * sin(theta));
