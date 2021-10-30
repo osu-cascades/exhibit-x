@@ -2,12 +2,13 @@ import org.openkinect.freenect.*;
 import org.openkinect.processing.*;
 
 Kinect kinect;
-static final int DEPTH_THRESHOLD = 900;
+static final int DEPTH_THRESHOLD = 1000;
+static final int SHAPES = 50;
+static final int DEPTH_STRIPS = DEPTH_THRESHOLD/SHAPES;
 int formResolution = 15;
 float angle = radians(360 / formResolution);
-int initRadius = 150;
+int initRadius = 1000;
 int stepSize = 2;
-int radius = (int)(initRadius * random(0.5, 1));
 float[] x = new float[formResolution];
 float[] y = new float[formResolution];
 
@@ -17,7 +18,6 @@ void setup(){
   kinect = new Kinect(this);
   kinect.enableMirror(true);
   kinect.initDepth();
-  stroke(0, 50);
   strokeWeight(0.75);
   background(255);
   noFill();
@@ -25,18 +25,24 @@ void setup(){
     x[i] = cos(angle * i) * initRadius;
     y[i] = sin(angle * i) * initRadius;
   }
+  colorMode(HSB, 1.0, 1.0, 1.0);
 }
 
 void draw(){
-  int[] center = centroid(kinect.getRawDepth());
-  int centerX = center[0];
-  int centerY = center[1];
-  for (int i = 0; i < formResolution; i++) {
-    x[i] += random(-stepSize, stepSize);
-    y[i] += random(-stepSize, stepSize);
-    // uncomment the following line to show position of the agents
-    // ellipse(x[i] + centerX, y[i] + centerY, 5, 5);
+  for(int i=0; i<SHAPES; i++){
+    int[] center = centroid(kinect.getRawDepth(), i*DEPTH_STRIPS, (i+1)*DEPTH_STRIPS);
+    if(center != null){
+      drawShape(center[0], center[1], (float)(center[2]/Math.sqrt(width*width + height*height)), color((float)i/SHAPES,1,1));
+    }
   }
+}
+
+void drawShape(int centerX, int centerY, float rad, int c){
+  stroke(c, 50);
+  for (int i = 0; i < formResolution; i++) {
+      x[i] += random(-stepSize, stepSize);
+      y[i] += random(-stepSize, stepSize);
+    }
 
   beginShape();
   // first controlpoint
@@ -44,31 +50,40 @@ void draw(){
 
   // only these points are drawn
   for (int i = 0; i < formResolution; i++) {
-    curveVertex(x[i] + centerX, y[i] + centerY);
+    curveVertex(x[i]*rad + centerX, y[i]*rad + centerY);
   }
-  curveVertex(x[0] + centerX, y[0] + centerY);
+  curveVertex(x[0]*rad + centerX, y[0]*rad + centerY);
 
   // end controlpoint
-  curveVertex(x[1] + centerX, y[1] + centerY);
-  endShape();
+  curveVertex(x[1]*rad + centerX, y[1]*rad + centerY);
+  endShape(); 
 }
 
-int[] centroid(int[] depth_data){
-  int[] pos = {0,0};
+int[] centroid(int[] depth_data, int min, int max){
+  int[] pos = {0,0,0};
   int total = 0;
+  int minX=width+1;
+  int minY=height+1;
+  int maxX=0;
+  int maxY=0;
    for(int i = 0; i < depth_data.length; i++) {
-     if(depth_data[i] < DEPTH_THRESHOLD){
+     if(min < depth_data[i] && depth_data[i] < max){
+       int x = i%640;
+       int y = i/640;
+       pos[0] += x;
+       pos[1] += y;
+       if(x<minX) minX=x;
+       if(y<minY) minY=y;
+       if(x>maxX) maxX=x;
+       if(y>maxY) maxY=y;
        total++;
-       pos[0] += i%640;
-       pos[1] += i/640;
      }
   }
-  if(total == 0){
-    pos[0] = 0;
-    pos[1] = 0;
-    return pos;
+  if(total < 1){
+    return null;
   }
   pos[0] = pos[0]*3/total;
   pos[1] = pos[1]*3/total;
+  pos[2] = (int)Math.sqrt(Math.pow((maxX - minX),2) + Math.pow((maxY - minY), 2));
   return pos;
 }
