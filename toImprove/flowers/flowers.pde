@@ -3,11 +3,12 @@ import org.openkinect.processing.*;
 
 Kinect kinect;
 static final int DEPTH_THRESHOLD = 1000;
-static final int SHAPES = 50;
+static final int CENTROID_MIN = 2000;
+static final int SHAPES = 10;
 static final int DEPTH_STRIPS = DEPTH_THRESHOLD/SHAPES;
 int formResolution = 15;
 float angle = radians(360 / formResolution);
-int initRadius = 1000;
+int initRadius = 500;
 int stepSize = 2;
 float[] x = new float[formResolution];
 float[] y = new float[formResolution];
@@ -19,7 +20,7 @@ void setup(){
   kinect.enableMirror(true);
   kinect.initDepth();
   strokeWeight(0.75);
-  background(255);
+  background(0);
   noFill();
   for (int i = 0; i < formResolution; i++) {
     x[i] = cos(angle * i) * initRadius;
@@ -56,7 +57,9 @@ void drawShape(int centerX, int centerY, float rad, int c){
 
   // end controlpoint
   curveVertex(x[1]*rad + centerX, y[1]*rad + centerY);
-  endShape(); 
+  endShape();
+  fill(0, 0,0 , 1);
+  rect(0,0,width,height);
 }
 
 int[] centroid(int[] depth_data, int min, int max){
@@ -79,11 +82,19 @@ int[] centroid(int[] depth_data, int min, int max){
        total++;
      }
   }
-  if(total < 1){
+  if(total < CENTROID_MIN){
     return null;
   }
   pos[0] = pos[0]*3/total;
   pos[1] = pos[1]*3/total;
   pos[2] = (int)Math.sqrt(Math.pow((maxX - minX),2) + Math.pow((maxY - minY), 2));
   return pos;
+}
+
+void keyPressed() {
+  if (keyPressed) {
+    if (key == 'r' ) {
+      background(color(1));
+    }
+  }
 }
