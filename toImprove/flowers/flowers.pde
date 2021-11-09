@@ -3,8 +3,8 @@ import org.openkinect.processing.*;
 
 Kinect kinect;
 static final int DEPTH_THRESHOLD = 1000;
-static final int CENTROID_MIN = 2000;
-static final int SHAPES = 10;
+static final int CENTROID_MIN = 5000;
+static final int SHAPES = 5;
 static final int DEPTH_STRIPS = DEPTH_THRESHOLD/SHAPES;
 int formResolution = 15;
 float angle = radians(360 / formResolution);
