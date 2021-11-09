@@ -4,7 +4,7 @@ import queasycam.*;
 
 QueasyCam cam;
 Kinect kinect;
-final static int BOX_SIZE = 10;
+final static int BOX_SIZE = 8;
 final static int DISPLAY_WEIGTH = 2;
 
 void setup() {
@@ -16,7 +16,6 @@ void setup() {
   cam.speed = 10;   
   cam.position = new PVector(width/2,height/2,200); 
   perspective(PI/3, (float)width/height, 0.01, 10000);
-  
 }
 
 void draw() {
@@ -40,17 +39,31 @@ void draw() {
 }
 
 void rect3D(int size){
-   beginShape();
-   
-   vertex(0,0,0);
-   vertex(BOX_SIZE*DISPLAY_WEIGTH,0,0);
-   vertex(BOX_SIZE*DISPLAY_WEIGTH,BOX_SIZE*DISPLAY_WEIGTH,0);
-   vertex(0,BOX_SIZE*DISPLAY_WEIGTH,0);
-   
-   vertex(0,BOX_SIZE*DISPLAY_WEIGTH,size);
-   vertex(BOX_SIZE*DISPLAY_WEIGTH,BOX_SIZE*DISPLAY_WEIGTH,size);
-   vertex(BOX_SIZE*DISPLAY_WEIGTH,0,size);
-   vertex(0,0,size);
+  
+   int a = BOX_SIZE*DISPLAY_WEIGTH;
 
-   endShape();
-}
+   rect(0,0,a,a);  
+   
+   translate(0,0,size);
+   rect(0,0,a,a);
+   translate(0, 0, -1 * size);
+   
+   rotateX(PI/2);
+   
+   rect(0,0,a,size);  
+   
+   translate(0,0,a * -1);
+   rect(0,0,a,size);
+   translate(0, 0, a);
+   
+   rotateY(PI/2);
+   
+   rect(0,0,a,size);
+   
+   translate(0,0,a);
+   rect(0,0,a,size);
+   translate(0, 0,-1 * a);
+ 
+    rotateY(PI * -0.5);
+     rotateX(PI * -0.5);
+ }
