@@ -4,8 +4,8 @@ import queasycam.*;
 
 QueasyCam cam;
 Kinect kinect;
-final static int BOX_SIZE = 8;
-final static int DISPLAY_WEIGTH = 2;
+final static int BOX_SIZE = 6;
+final static int DISPLAY_WEIGTH = 4;
 
 void setup() {
   size(1280, 960, P3D);
@@ -16,6 +16,7 @@ void setup() {
   cam.speed = 10;   
   cam.position = new PVector(width/2,height/2,200); 
   perspective(PI/3, (float)width/height, 0.01, 10000);
+  rectMode(CORNERS);
 }
 
 void draw() {

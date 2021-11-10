@@ -33,8 +33,10 @@ PImage blobs;
 int kinectWidth = 640;
 int kinectHeight = 480;
 PImage cam = createImage(640, 480, RGB);
-int minThresh = 600;
+int minThresh = 50;
 int maxThresh = 900;
+int minBallSize = 2;
+int maxBallSize = 15;
 // to center and rescale from 640x480 to higher custom resolutions
 float reScale;
 float deg;
@@ -71,7 +73,7 @@ void keyPressed() {
 void setup() {
   println("SET UP");
   // it's possible to customize this, for example 1920x1080
-  size(1280, 800, P3D);
+  size(1920, 1080, P3D);
   kinect = new Kinect(this);
   // mirror the image to be more intuitive
   kinect.enableMirror(true);
@@ -90,7 +92,7 @@ void setup() {
   // setup box2d, create world, set gravity
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
-  box2d.setGravity(0, -5);
+  box2d.setGravity(0, -20);
   // set random colors (background, blob)
   setRandomColors(1);
 
@@ -174,101 +176,14 @@ void draw() {
   // destroy the person's body (important!)
   poly.destroyBody();
   // set the colors randomly every 240th frame
-  setRandomColors(240);}
+  setRandomColors(240);
+}
 
 void updateAndDrawBox2D() {
   // if frameRate is sufficient, add a polygon and a circle with a random radius
-  // x, y, r, HOW MANY SIDES
-  toxiPoly = new Circle(width/2,height/2-80,100).toPolygon2D(int(12));
-  gfx.polygon2D(toxiPoly);
-  
-  // define a dynamic body positioned at xy in box2d world coordinates,
-    // create it and set the initial values for this box2d body's speed and angle
-    //INVISIBLE FORCE FIELD IN THE MIDDLE LOL
-    
-    BodyDef bd = new BodyDef();
-    bd.type = BodyType.STATIC;
-    bd.position.set(box2d.coordPixelsToWorld(new Vec2(width/4, height/4)));
-    body = box2d.createBody(bd);
-    //body.setLinearVelocity(new Vec2(random(-8, 8), random(2, 8)));
-    //body.setAngularVelocity(random(-5, 5));
-    
-    // box2d circle shape of radius r
-     CircleShape cs2 = new CircleShape();
-     cs2.m_radius = box2d.scalarPixelsToWorld(50);
-      // tweak the circle's fixture def a little bit
-     FixtureDef fd = new FixtureDef();
-     fd.shape = cs2;
-     fd.density = 1;
-     fd.friction = 0.01;
-     fd.restitution = 0.3;
-      // create the fixture from the shape's fixture def (deflect things based on the actual circle shape)
-     body.createFixture(fd);
-    
-    //MENGSI MOUSE FACE
-    BodyDef mmF = new BodyDef();
-    mmF.type = BodyType.STATIC;
-    mmF.position.set(box2d.coordPixelsToWorld(new Vec2(width/4, height/2 + 50)));
-    body2 = box2d.createBody(mmF);
-    //body2.setLinearVelocity(new Vec2(random(-8, 8), random(2, 8)));
-    //body2.setAngularVelocity(random(-5, 5));
-    
-     // Mengsi face ACTUAL physics ????
-      CircleShape cs3 = new CircleShape();
-      cs3.m_radius = box2d.scalarPixelsToWorld(50);
-      // tweak the circle's fixture def a little bit
-      FixtureDef fd2 = new FixtureDef();
-      fd2.shape = cs3;
-      fd2.density = 1;
-      fd2.friction = 0.01;
-      fd2.restitution = 0.3;
-      // create the fixture from the shape's fixture def (deflect things based on the actual circle shape)
-      body2.createFixture(fd2);
-      
-     //MENGSI MOUSE LEFT
-    BodyDef mmL = new BodyDef();
-    mmL.type = BodyType.STATIC;
-    mmL.position.set(box2d.coordPixelsToWorld(new Vec2(width/4 - 75, height/2 -10  )));
-    body3 = box2d.createBody(mmL);
-    //body2.setLinearVelocity(new Vec2(random(-8, 8), random(2, 8)));
-    //body2.setAngularVelocity(random(-5, 5));
-    
-     // Mengsi LEFT ACTUAL physics ????
-      CircleShape cs4 = new CircleShape();
-      cs4.m_radius = box2d.scalarPixelsToWorld(50);
-      // tweak the circle's fixture def a little bit
-      FixtureDef fd3 = new FixtureDef();
-      fd3.shape = cs4;
-      fd3.density = 1;
-      fd3.friction = 0.01;
-      fd3.restitution = 0.3;
-      // create the fixture from the shape's fixture def (deflect things based on the actual circle shape)
-      body3.createFixture(fd3);
-      
-      //MENGSI MOUSE RIGHT
-    BodyDef mmR = new BodyDef();
-    mmR.type = BodyType.STATIC;
-    mmR.position.set(box2d.coordPixelsToWorld(new Vec2(width/4 + 75, height/2 -10 )));
-    body4 = box2d.createBody(mmR);
-    //body2.setLinearVelocity(new Vec2(random(-8, 8), random(2, 8)));
-    //body2.setAngularVelocity(random(-5, 5));
-    
-     // Mengsi RIGHT AHHHHHHH ACTUAL physics ????
-      CircleShape cs5 = new CircleShape();
-      cs5.m_radius = box2d.scalarPixelsToWorld(50);
-      // tweak the circle's fixture def a little bit
-      FixtureDef fd4 = new FixtureDef();
-      fd4.shape = cs5;
-      fd4.density = 1;
-      fd4.friction = 0.01;
-      fd4.restitution = 0.3;
-      // create the fixture from the shape's fixture def (deflect things based on the actual circle shape)
-      body4.createFixture(fd4);
-      
-
   if (frameRate > 30) {
-    CustomShape shape1 = new CustomShape(kinectWidth/2, -50, random(2, 5), BodyType.DYNAMIC) ;
-    CustomShape shape2 = new CustomShape(kinectWidth/2, -50, random(2, 5), BodyType.DYNAMIC);
+    CustomShape shape1 = new CustomShape(kinectWidth/2, -50, random(minBallSize, maxBallSize), BodyType.DYNAMIC) ;
+    CustomShape shape2 = new CustomShape(kinectWidth/2, -50, random(minBallSize, maxBallSize), BodyType.DYNAMIC);
     polygons.add(shape1);
     polygons.add(shape2);
   }
