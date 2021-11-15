@@ -34,7 +34,7 @@ int kinectWidth = 640;
 int kinectHeight = 480;
 PImage cam = createImage(640, 480, RGB);
 int minThresh = 50;
-int maxThresh = 900;
+int maxThresh = 1500;
 int minBallSize = 2;
 int maxBallSize = 15;
 // to center and rescale from 640x480 to higher custom resolutions
@@ -70,10 +70,12 @@ void keyPressed() {
     kinect.setTilt(deg);
   }
 
+void settings(){
+    System.setProperty("jogl.disable.openglcore", "true");
+    size(1920, 1080, P3D);
+} 
+
 void setup() {
-  println("SET UP");
-  // it's possible to customize this, for example 1920x1080
-  size(1920, 1080, P3D);
   kinect = new Kinect(this);
   // mirror the image to be more intuitive
   kinect.enableMirror(true);

@@ -14,7 +14,7 @@ ArrayList<Box> boxes;
 
 PImage background;
 
-final static int BOX_SIZE = 15;
+final static int BOX_SIZE = 10;
 final static int DEPTH_MAX = 900;
 final static int RESET_INTERVAL = 20000; //in millsecs
 
@@ -28,7 +28,7 @@ void setup() {
   box2d = new Box2DProcessing(this);
   box2d.createWorld();
 
-  box2d.setGravity(0, -100);
+  box2d.setGravity(0, -50);
 
   boxes = new ArrayList<Box>();
   boundaries = new ArrayList<Boundary>();

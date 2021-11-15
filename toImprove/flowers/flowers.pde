@@ -94,7 +94,7 @@ int[] centroid(int[] depth_data, int min, int max){
 void keyPressed() {
   if (keyPressed) {
     if (key == 'r' ) {
-      background(color(1));
+      background(color(0));
     }
   }
 }

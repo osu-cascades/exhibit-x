@@ -6,9 +6,14 @@ QueasyCam cam;
 Kinect kinect;
 final static int BOX_SIZE = 6;
 final static int DISPLAY_WEIGTH = 4;
+float deg;
+
+void settings(){
+    System.setProperty("jogl.disable.openglcore", "true");
+    size(1920, 1080, P3D);
+}
 
 void setup() {
-  size(1280, 960, P3D);
   kinect = new Kinect(this);
   kinect.initDepth();
   kinect.initVideo();
@@ -17,6 +22,7 @@ void setup() {
   cam.position = new PVector(width/2,height/2,200); 
   perspective(PI/3, (float)width/height, 0.01, 10000);
   rectMode(CORNERS);
+  deg = kinect.getTilt();
 }
 
 void draw() {
@@ -68,3 +74,13 @@ void rect3D(int size){
     rotateY(PI * -0.5);
      rotateX(PI * -0.5);
  }
+ 
+ void keyPressed() {
+  if (keyCode == UP) {
+    deg++;
+  } else if (keyCode == DOWN) {
+    deg--;
+  }
+  deg = constrain(deg, 0, 30);
+  kinect.setTilt(deg);
+}
