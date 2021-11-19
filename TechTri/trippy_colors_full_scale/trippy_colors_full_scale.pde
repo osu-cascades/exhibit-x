@@ -14,7 +14,7 @@ float angle;
 
 
 void setup() {
-  size(1920, 1440);
+  size(1920, 1080);
   paintSurface = createImage(WIDTH, HEIGHT, ARGB);
   kinect = new Kinect(this);
   kinect.initDepth();
@@ -40,7 +40,7 @@ void draw() {
   paintSurface.updatePixels();
   image(paintSurface, 0, 0);
   offset = offset + OFFSET_INCREASE % color_range;
-  text("color range: " + color_range, 10, 10);
+  //text("color range: " + color_range, 10, 10);
 }
 
 void triple_pixels(PImage paintSurface, int pixel_index, int pixel_color){
