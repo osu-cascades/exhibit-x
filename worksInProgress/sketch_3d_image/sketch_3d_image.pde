@@ -1,12 +1,19 @@
 import org.openkinect.freenect.*;
 import org.openkinect.processing.*;
 import queasycam.*;
+import java.awt.Robot;
+
+Robot robot;
 
 QueasyCam cam;
 Kinect kinect;
 final static int BOX_SIZE = 6;
 final static int DISPLAY_WEIGTH = 4;
+final static int MAX_ANGEL_SEGS = 1000;
+int angleSeg = 0;
+int angleSegDelta = 1;
 float deg;
+int circleSize = 2000;
 
 void settings(){
     System.setProperty("jogl.disable.openglcore", "true");
@@ -19,10 +26,18 @@ void setup() {
   kinect.initVideo();
   cam = new QueasyCam(this);
   cam.speed = 10;   
-  cam.position = new PVector(width/2,height/2,200); 
+  cam.position = new PVector(2809.2893,-77.227715,-349.65762); 
+  cam.tilt =0.4;
+  cam.pan = 2.2;
+   cam.controllable = true;
   perspective(PI/3, (float)width/height, 0.01, 10000);
   rectMode(CORNERS);
-  deg = kinect.getTilt();
+  try {
+    robot = new Robot();
+  } 
+  catch (Throwable e) {
+  }
+  robot.mouseMove(width/2, height/2);
 }
 
 void draw() {
@@ -39,10 +54,18 @@ void draw() {
       translate(x*DISPLAY_WEIGTH, y*DISPLAY_WEIGTH, depth);
       fill(videoData.pixels[i]);
       rect3D(depth);
-      //box(BOX_SIZE*DISPLAY_WEIGTH);
       translate(x*DISPLAY_WEIGTH * -1, y*DISPLAY_WEIGTH * -1, depth * -1);
     }
   }
+  
+  angleSeg += angleSegDelta;
+  if(angleSeg > MAX_ANGEL_SEGS)
+    angleSegDelta = -1;
+  else if(angleSeg < 0)
+    angleSegDelta = 1;
+    
+  System.out.println("pan: " + cam.pan + " tilt: " + cam.tilt);
+  System.out.println(cam.position.x + "," + cam.position.y + "," + cam.position.z);
 }
 
 void rect3D(int size){

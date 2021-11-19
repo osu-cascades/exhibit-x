@@ -30,27 +30,47 @@ class Boundary {
     // We're just a box
     sd.setAsBox(box2dW, box2dH);
 
-
+    
+     FixtureDef fd = new FixtureDef();
+    fd.shape = sd;
+     fd.density = 1;
+    fd.friction = 0.3;
+    fd.restitution = 0.5;
+    
     // Create the body
     BodyDef bd = new BodyDef();
-    bd.type = BodyType.STATIC;
+    bd.type = BodyType.DYNAMIC;
     bd.position.set(box2d.coordPixelsToWorld(x,y));
     b = box2d.createBody(bd);
     
     // Attached the shape to the body using a Fixture
-    b.createFixture(sd,1);
+    b.createFixture(fd);
   }
   
   void killBody() {
     box2d.destroyBody(b);
   }
+  
+  void update(int newX, int newY){
+    b.setLinearVelocity(new Vec2(newX - x, newY - y));
+    x += newX - x;
+    y += newY - y;
+  }
 
   // Draw the boundary, if it were at an angle we'd have to do something fancier
   void display() {
+    // We look at each body and get its screen position
+    Vec2 pos = box2d.getBodyPixelCoord(b);
+    // Get its angle of rotation
+    float a = b.getAngle();
+
+    imageMode(CENTER);
+    pushMatrix();
+    translate(pos.x, pos.y);
+    rotate(-a);
     fill(0);
-    stroke(0);
-    rectMode(CENTER);
-    rect(x,y,w,h);
+    rect(0,0,w,h);
+    popMatrix();
   }
 
 }
