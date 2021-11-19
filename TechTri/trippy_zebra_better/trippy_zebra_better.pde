@@ -15,7 +15,7 @@ float angle;
 
 
 void setup() {
-  size(1920, 1080);
+  size(1920, 1440);
   paintSurface = createImage(WIDTH, HEIGHT, ARGB);
   kinect = new Kinect(this);
   kinect.initDepth();

@@ -21,6 +21,7 @@ void settings(){
 }
 
 void setup() {
+  noCursor();
   kinect = new Kinect(this);
   kinect.initDepth();
   kinect.initVideo();
