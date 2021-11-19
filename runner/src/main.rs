@@ -19,7 +19,7 @@ fn main() {
         for sketch in &sketches {
             println!("Running {}", sketch);
             sketch.spawn();
-            thread::sleep(Duration::from_secs(5));
+            thread::sleep(Duration::from_secs(60));
             Sketch::kill_all();
         }
     }
