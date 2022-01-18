@@ -2,3 +2,4 @@
 *.class
 */target
 */Cargo.lock
+exhibit_supervisor/sketches
