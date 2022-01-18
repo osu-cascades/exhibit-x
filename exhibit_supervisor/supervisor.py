@@ -8,10 +8,12 @@ import urllib.request
 import zipfile
 import tempfile
 import subprocess
+import pickle
 
 API_URL = "https://exhibitx.herokuapp.com"
 API_CURRENT_SKETCH = "/sketch/current"
 SKETCHES_DIR = os.path.dirname(os.path.realpath(__file__)) + "/sketches"
+SUPERVISOR_PICKLE_FILE = "supervisor_state.p"
 
 class Sketch:
     def __init__(self, id: int, path: str) -> None:
@@ -77,7 +79,7 @@ class Supervisor:
         subprocess.run(["processing-java", "--sketch={}".format(sketch.path), "--run"])
 
     def save_state(self) -> None:
-        pass
+        pickle.dump(self, open(SUPERVISOR_PICKLE_FILE, "wb"))
 
     def run(self):
         # Create the sketch download directory if it doesn't exist
@@ -90,8 +92,13 @@ class Supervisor:
             self.start_sketch(new_sketch)
             self.current_sketch = new_sketch
 
-        #self.save_state()
+        self.save_state()
 
+try:
+    # Try to load supervisor state from disk
+    sup = pickle.load(open(SUPERVISOR_PICKLE_FILE, "rb"))
+except Exception as e:
+    # Start fresh if something goes wrong
+    sup = Supervisor()
 
-sup = Supervisor()
 sup.run()
