@@ -19,16 +19,18 @@ class Sketch:
         self.path = path
 
     @staticmethod
-    def download(id: int, url: str) -> Sketch:
-        working_name = str(uuid.uuid4())
-        sketch_dir = SKETCHES_DIR + "/" + working_name
+    def download(id: int, filename: str, url: str) -> Sketch:
+        unique_name = str(uuid.uuid4())
+        sketch_dir = SKETCHES_DIR + "/{}/{}".format(unique_name, filename)
         print("Attempting to download new sketch from {} to {}".format(url, tempfile.gettempdir()))
-        download_path = tempfile.gettempdir() + "/" + "{}.zip".format(working_name)
-        urllib.request.urlretrieve("https://" + url, download_path)
-        os.mkdir(sketch_dir) # If theres a uuid collision this will break. I can live with the chances of that happening for now
+ 
+        # TODO: Handle an invalid response code
+        (zip_path, _code) =  urllib.request.urlretrieve(url)
 
-        with zipfile.ZipFile(download_path, 'r') as zip_ref:
-            zip_ref.extractall(sketch_dir)
+        os.makedirs(sketch_dir) # If theres a uuid collision this will break. I can live with the chances of that happening for now
+
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(SKETCHES_DIR + "/{}".format(unique_name))
 
         return Sketch(id, sketch_dir)
 
@@ -53,6 +55,7 @@ class Supervisor:
         try:
             latest_id = int(response_json['sketchID'])
             download_url = response_json["downloadURL"]
+            title = response_json["title"]
         except Exception as e:
             print("Failed to grab sketch attributes from json map {} with error {}".format(response_json, e))
             return None
@@ -65,7 +68,7 @@ class Supervisor:
         if latest_id in self.sketch_cache:
             return self.sketch_cache[latest_id]
 
-        new_sketch = Sketch.download(latest_id, download_url)
+        new_sketch = Sketch.download(latest_id, title, download_url)
         self.sketch_cache[latest_id] = new_sketch # Add the new sketch to the sketch cache
         return new_sketch
 
