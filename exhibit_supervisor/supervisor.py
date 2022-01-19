@@ -1,4 +1,3 @@
-
 from __future__ import annotations # Enables some experimental type hinting features so download() can return a Sketch object
 import os
 from typing import Optional, Dict
@@ -9,6 +8,7 @@ import zipfile
 import tempfile
 import subprocess
 import pickle
+import psutil
 
 # crontab expression to use with this script
 # * * * * * DISPLAY=:0 /usr/bin/python3 /home/exhibitx/ExhibitX/exhibit-x/exhibit_supervisor/supervisor.py
@@ -77,6 +77,8 @@ class Supervisor:
         self.sketch_cache[latest_id] = new_sketch # Add the new sketch to the sketch cache
         return new_sketch
 
+    def sketch_already_running(self) -> bool:
+        return "processing-java" in (p.name() for p in psutil.process_iter())
 
     def start_sketch(self, sketch: Sketch) -> None:
         # Kill existing sketches before starting a new one
@@ -93,17 +95,23 @@ class Supervisor:
 
         new_sketch = self.try_fetch_latest_sketch()
 
-        if new_sketch is not None:
+        if new_sketch is not None:                                                   # If there is a new sketch, start it
             self.start_sketch(new_sketch)
             self.current_sketch = new_sketch
+        elif not self.sketch_already_running() and self.current_sketch is not None:  # If not, make sure the current sketch is still running
+            self.start_sketch(self.current_sketch)
 
         self.save_state()
 
-try:
-    # Try to load supervisor state from disk
-    sup = pickle.load(open(SUPERVISOR_PICKLE_FILE, "rb"))
-except Exception as e:
-    # Start fresh if something goes wrong
-    sup = Supervisor()
+def main():
+    try:
+        # Try to load supervisor state from disk
+        sup = pickle.load(open(SUPERVISOR_PICKLE_FILE, "rb"))
+    except Exception:
+        # Start fresh if something goes wrong
+        sup = Supervisor()
 
-sup.run()
+    sup.run()
+
+if __name__ == "__main__":
+    main()
