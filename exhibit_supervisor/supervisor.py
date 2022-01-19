@@ -76,7 +76,9 @@ class Supervisor:
 
 
     def start_sketch(self, sketch: Sketch) -> None:
-        subprocess.Popen(["processing-java", "--sketch={}".format(sketch.path), "--run"])
+        # Kill existing sketches before starting a new one
+        subprocess.run(["killall", "/home/exhibitx/.local/share/applications/processing-3.5.4/java/bin/java"])
+        subprocess.Popen(["processing-java", "--sketch={}".format(sketch.path), "--present"])
 
     def save_state(self) -> None:
         pickle.dump(self, open(SUPERVISOR_PICKLE_FILE, "wb"))
