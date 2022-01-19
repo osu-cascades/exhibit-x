@@ -10,10 +10,13 @@ import tempfile
 import subprocess
 import pickle
 
+# crontab expression to use with this script
+# * * * * * DISPLAY=:0 /usr/bin/python3 /home/exhibitx/ExhibitX/exhibit-x/exhibit_supervisor/supervisor.py
+
 API_URL = "https://exhibitx.herokuapp.com"
 API_CURRENT_SKETCH = "/sketch/current"
 SKETCHES_DIR = os.path.dirname(os.path.realpath(__file__)) + "/sketches"
-SUPERVISOR_PICKLE_FILE = "supervisor_state.p"
+SUPERVISOR_PICKLE_FILE = os.path.dirname(os.path.realpath(__file__)) + "/supervisor_state.p"
 
 class Sketch:
     def __init__(self, id: int, path: str) -> None:
@@ -78,7 +81,7 @@ class Supervisor:
     def start_sketch(self, sketch: Sketch) -> None:
         # Kill existing sketches before starting a new one
         subprocess.run(["killall", "/home/exhibitx/.local/share/applications/processing-3.5.4/java/bin/java"])
-        subprocess.Popen(["processing-java", "--sketch={}".format(sketch.path), "--present"])
+        subprocess.Popen(["/home/exhibitx/.local/share/applications/processing-3.5.4/processing-java", "--sketch={}".format(sketch.path), "--present"])
 
     def save_state(self) -> None:
         pickle.dump(self, open(SUPERVISOR_PICKLE_FILE, "wb"))
