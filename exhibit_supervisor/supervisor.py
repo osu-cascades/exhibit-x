@@ -46,7 +46,11 @@ class Supervisor:
     
     # TODO: Refactor
     def try_fetch_latest_sketch(self) -> Optional[Sketch]:
-        response = requests.get(API_URL + API_CURRENT_SKETCH)
+        try:
+            response = requests.get(API_URL + API_CURRENT_SKETCH)
+        except Exception:
+            print("Failed to get response from server. Am I connected to the internet?")
+            return None
         if response.status_code != 200:
             print("Got bad response code {} while trying to poll {} in try_fetch_latest_sketch()".format(response.status_code, API_URL + API_CURRENT_SKETCH))
             return None
