@@ -15,6 +15,7 @@ import psutil
 
 API_URL = "https://exhibitx.herokuapp.com"
 API_CURRENT_SKETCH = "/sketch/current"
+API_HEARTBEAT = "/exhibit/heartbeat"
 SKETCHES_DIR = os.path.dirname(os.path.realpath(__file__)) + "/sketches"
 SUPERVISOR_PICKLE_FILE = os.path.dirname(os.path.realpath(__file__)) + "/supervisor_state.p"
 
@@ -104,6 +105,13 @@ class Supervisor:
             self.current_sketch = new_sketch
         elif not self.sketch_already_running() and self.current_sketch is not None:  # If not, make sure the current sketch is still running
             self.start_sketch(self.current_sketch)
+
+        try:
+            current_id = self.current_sketch.id if self.current_sketch is not None else -1    
+            requests.post(API_URL + API_HEARTBEAT, data={"activeSketch": current_id})
+        except Exception as e:
+            print("Failed to send heartbeat message. Received the following error...")
+            print(e)
 
         self.save_state()
 
