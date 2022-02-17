@@ -6,7 +6,7 @@ import uuid
 import urllib.request
 import zipfile
 import tempfile
-#import subprocess
+import subprocess
 import pickle
 import psutil
 from datetime import datetime
@@ -93,9 +93,8 @@ class Supervisor:
 
     def start_sketch(self, sketch: Sketch) -> None:
         # Kill existing sketches before starting a new one
-        # subprocess.run(["killall", "/home/exhibitx/.local/share/applications/processing-3.5.4/java/bin/java"])
-        # subprocess.Popen(["/home/exhibitx/.local/share/applications/processing-3.5.4/processing-java", "--sketch={}".format(sketch.path), "--present"])
-        print("Tried to start sketch ", sketch.id)
+        subprocess.run(["killall", "/home/exhibitx/.local/share/applications/processing-3.5.4/java/bin/java"])
+        subprocess.Popen(["/home/exhibitx/.local/share/applications/processing-3.5.4/processing-java", "--sketch={}".format(sketch.path), "--present"])
 
     def try_fetch_desired_runner(self) -> Optional[Runner]:
         response = requests.get(API_URL + API_CURRENT_SKETCH)
