@@ -69,6 +69,9 @@ class StaticRotationRunner:
         self.display_id = id
 
     def desiredSketch(self) -> Sketch:
+        if (datetime.now() - self.last_change).total_seconds() > self.periodSeconds:
+            self.current_sketch_index = (self.current_sketch_index + 1) % len(self.sketch_list)
+            self.last_change = datetime.now()
         return self.sketch_list[self.current_sketch_index]
 
     def id(self) -> int:
@@ -82,6 +85,7 @@ class Supervisor:
     def __init__(self) -> None:
         self.current_runner: Optional[Runner] = None
         self.sketch_cache: Dict[int, Sketch] = {}
+        self.current_sketch_id: Optional[int] = None
     
 
     def sketch_already_running(self) -> bool:
@@ -155,13 +159,17 @@ class Supervisor:
 
         new_runner = self.try_fetch_desired_runner()
 
-        # If there is a new runner, start it
+        # If this is a new runner, set it to be the current runner
         # TODO: Refactor this long, messy conditional
         if new_runner is not None and self.current_runner is None or (new_runner is not None and self.current_runner is not None and (new_runner.type() != self.current_runner.type() or new_runner.id() != self.current_runner.id())):
             self.current_runner = new_runner
-            self.start_sketch(self.current_runner.desiredSketch())
-        elif not self.sketch_already_running() and self.current_runner is not None:  # If not, make sure the current sketch is still running
-            self.start_sketch(self.current_runner.desiredSketch())
+
+        if self.current_runner is not None:
+            runner_requested_sketch = self.current_runner.desiredSketch()
+
+            if runner_requested_sketch.id != self.current_sketch_id:
+                self.start_sketch(runner_requested_sketch)
+                self.current_sketch_id = runner_requested_sketch.id
 
         try:
             current_id =  self.current_runner.id() if self.current_runner is not None else -1
