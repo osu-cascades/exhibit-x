@@ -10,9 +10,7 @@ import subprocess
 import pickle
 import psutil
 from datetime import datetime
-
-# crontab expression to use with this script
-# * * * * * DISPLAY=:0 /usr/bin/python3 /home/exhibitx/ExhibitX/exhibit-x/exhibit_supervisor/supervisor.py
+import time
 
 API_URL = "https://exhibitx.herokuapp.com"
 API_CURRENT_SKETCH = "/exhibit/current"
@@ -45,6 +43,7 @@ class Runner(Protocol):
     def desiredSketch(self) -> Sketch: ...
     def id(self) -> int: ...
     def type(self) -> str: ...
+    def details(self) -> str: ...
 
 class SingleSketchRunner:
     def __init__(self, id: int, sketch: Sketch):
@@ -59,6 +58,9 @@ class SingleSketchRunner:
     
     def type(self) -> str:
         return "singleSketch"
+
+    def details(self) -> str:
+        return "type:{},id:{}".format(self.id(), self.type())
 
 class StaticRotationRunner:
     def __init__(self, id: int, sketch_list: list[Sketch], periodSeconds: int):
@@ -79,6 +81,9 @@ class StaticRotationRunner:
 
     def type(self) -> str:
         return "staticRotation"
+
+    def details(self) -> str:
+        return "type:{},id:{},period:{},sketches:{}".format(self.id(), self.type(), self.periodSeconds, self.sketch_list)
 
 
 class Supervisor:
@@ -159,8 +164,7 @@ class Supervisor:
         new_runner = self.try_fetch_desired_runner()
 
         # If this is a new runner, set it to be the current runner
-        # TODO: Refactor this long, messy conditional
-        if new_runner is not None and self.current_runner is None or (new_runner is not None and self.current_runner is not None and (new_runner.type() != self.current_runner.type() or new_runner.id() != self.current_runner.id())):
+        if new_runner is not None and (self.current_runner is None or self.current_runner.details() != new_runner.details()):
             self.current_runner = new_runner
 
         if self.current_runner is not None:
@@ -188,7 +192,10 @@ def main():
         # Start fresh if something goes wrong
         sup = Supervisor()
 
-    sup.run()
+    while True:
+        sup.run()
+        time.sleep(1)
+
 
 if __name__ == "__main__":
     main()
