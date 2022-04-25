@@ -94,7 +94,11 @@ class Supervisor:
     
 
     def sketch_already_running(self) -> bool:
-        return "processing-java" in (p.name() for p in psutil.process_iter())
+        alive = False
+        for p in psutil.process_iter():
+            if p.name() == "processing-java" and p.status() != "zombie":
+                alive = True
+        return alive
 
     def start_sketch(self, sketch: Sketch) -> None:
         # Kill existing sketches before starting a new one
@@ -170,7 +174,7 @@ class Supervisor:
         if self.current_runner is not None:
             runner_requested_sketch = self.current_runner.desiredSketch()
 
-            if runner_requested_sketch.id != self.current_sketch_id:
+            if runner_requested_sketch.id != self.current_sketch_id or not self.sketch_already_running():
                 self.start_sketch(runner_requested_sketch)
                 self.current_sketch_id = runner_requested_sketch.id
 
@@ -191,7 +195,7 @@ def main():
     except Exception:
         # Start fresh if something goes wrong
         sup = Supervisor()
-
+    print("loaded")
     while True:
         sup.run()
         time.sleep(1)
