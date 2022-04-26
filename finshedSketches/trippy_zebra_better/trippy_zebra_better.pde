@@ -1,3 +1,4 @@
+
 import org.openkinect.freenect.*;
 import org.openkinect.processing.*;
 
@@ -15,6 +16,7 @@ float angle;
 
 
 void setup() {
+  //fullScreen();
   size(1920, 1080);
   paintSurface = createImage(WIDTH, HEIGHT, ARGB);
   kinect = new Kinect(this);

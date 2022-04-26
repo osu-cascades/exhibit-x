@@ -13,18 +13,19 @@ float angle;
 
 
 void setup() {
+  background(0);
   size(1920, 1080);
   kinect = new Kinect(this);
   kinect.initDepth();
   angle = kinect.getTilt();
   monoFont = createFont("VerilySerifMono.otf",TEXT_HIEGHT);
-  fill(0);
+  fill(255);
   textFont(monoFont);
 }
 
 
 void draw() {
-  background(255);
+  background(0);
   int[] depthData = kinect.getRawDepth();
   for(int y=1; y<HEIGHT/TEXT_HIEGHT; y++){
     String str = "";

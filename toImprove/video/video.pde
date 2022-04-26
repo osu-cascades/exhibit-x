@@ -31,7 +31,7 @@ void draw() {
     paintSurface.pixels[i] = (int)random(0,2) == 0 ? color(255) : color(0);
     for(int m=movies.length-1; m>=0; m--)
       if(depth < 300 + (m+1)*DEPTH_THRESHOLD)
-         paintSurface.pixels[i] = lerpColor(colors[(int)((x + random(-0.05, 0.05))*colors.length) % colors.length], movies[m].pixels[((int)(x * movies[m].width) + ((int)(y * movies[m].height)) * movies[m].width)], 0.8);  
+         paintSurface.pixels[i] = movies[m].pixels[((int)(x * movies[m].width) + ((int)(y * movies[m].height)) * movies[m].width)];
   }
   paintSurface.updatePixels();
   image(paintSurface, 0, 0);

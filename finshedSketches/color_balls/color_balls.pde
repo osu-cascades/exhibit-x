@@ -9,7 +9,7 @@ float angle;
 
 
 void setup() {
-  size(1920, 1440);
+  size(1920, 1080);
   kinect = new Kinect(this);
   angle = kinect.getTilt();
   kinect.initVideo();
@@ -36,7 +36,7 @@ float depthDaimeter(int[] depthData, int x, int y, int size){
      for(int yi=0; yi<size; yi++)
        depthTotal += depthData[(x+xi) + (y+yi)*640];
   //System.out.println(((float)depthTotal) / (size*size));
-  return constrain(1 - (((float)depthTotal) / (size*size))/1200, 0, 1);
+  return constrain(1 - (((float)depthTotal) / (size*size))/1800, 0, 1);
 }
 
 int adv_color_sq(PImage img, int x, int y, int size){

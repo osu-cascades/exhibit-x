@@ -15,8 +15,8 @@ ArrayList<Box> boxes;
 PImage background;
 
 final static int BOX_SIZE = 10;
-final static int DEPTH_MAX = 900;
-final static int RESET_INTERVAL = 20000; //in millsecs
+final static int DEPTH_MAX = 950;
+final static int RESET_INTERVAL = 8000; //in millsecs
 
 float kinectToBackgroundWidth, kinectToBackgroundHieght, angle;
 int prevTime = second();

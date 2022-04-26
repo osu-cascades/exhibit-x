@@ -9,7 +9,7 @@ static final int STRIP_SIZE = 20;
 static final int DEPTH_THRESHOLD = 900;
 int LINE_SIZE = 1;
 int color_range = 50;
-static final int OFFSET_INCREASE = 5;
+static final int OFFSET_INCREASE = 0;
 int offset = 0;
 float angle;
 
@@ -33,6 +33,7 @@ void draw_background(){
   colorMode(HSB, color_range, 1.0, 1.0);
   paintSurface.loadPixels();
   int[] depth_data = kinect.getRawDepth();
+  if(noKinect(depth_data)) return;
   for(int i = 0; i < depth_data.length; i++) {
      triple_pixels(paintSurface, i, color((depth_data[i] + offset) % color_range, 1.0, 1.0));
   }
@@ -45,6 +46,7 @@ void draw_forground() {
   colorMode(RGB, 255, 255,255,255);
   paintSurface.loadPixels();
   int[] depth_data = kinect.getRawDepth();
+  if(noKinect(depth_data)) return;
   for (int i = 0; i < depth_data.length; i+=LINE_SIZE) {
     int c = color(0,0,0,255);
      
@@ -82,4 +84,10 @@ void keyPressed() {
     angle = constrain(angle, 0, 30);
     kinect.setTilt(angle);
   }
+}
+
+boolean noKinect(int[] depth_data){
+ int sum = 0;
+ for(int i: depth_data) sum += i;
+ return sum == 0;
 }
