@@ -54,7 +54,9 @@ void draw() {
       int depth = depthData[i];
       translate(x*DISPLAY_WEIGTH, y*DISPLAY_WEIGTH, depth);
       fill(videoData.pixels[i]);
-      rect3D(depth);
+      if(depth < 900)
+        box(10);
+        //rect3D(depth);
       translate(x*DISPLAY_WEIGTH * -1, y*DISPLAY_WEIGTH * -1, depth * -1);
     }
   }
