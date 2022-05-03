@@ -96,7 +96,7 @@ class Supervisor:
     def sketch_already_running(self) -> bool:
         alive = False
         for p in psutil.process_iter():
-            if p.name() == "processing-java" and p.status() != "zombie":
+            if p.name() == "processing-java" and (p.status() == "sleeping" or p.status() == "running"):
                 alive = True
         return alive
 
