@@ -46,7 +46,7 @@ void draw() {
   PImage videoData = kinect.getVideoImage();
   videoData.loadPixels();
   
-  background(255);
+  background(0);
   noStroke();
   for(int x=0; x<640; x+=BOX_SIZE){
     for(int y=0; y<480; y+=BOX_SIZE){
