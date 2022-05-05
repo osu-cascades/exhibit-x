@@ -11,7 +11,6 @@ import pickle
 import psutil
 from datetime import datetime
 import time
-from projector import Projector
 from datetime import datetime, time
 
 API_URL = "https://exhibitx.herokuapp.com"
@@ -19,8 +18,7 @@ API_CURRENT_SKETCH = "/exhibit/current"
 API_HEARTBEAT = "/exhibit/heartbeat"
 SKETCHES_DIR = os.path.dirname(os.path.realpath(__file__)) + "/sketches"
 SUPERVISOR_PICKLE_FILE = os.path.dirname(os.path.realpath(__file__)) + "/supervisor_state.p"
-ACTIVE_START_TIME = time(7) # 7am
-ACTIVE_END_TIME = time(18) # 6pm
+
 
 class Sketch:
     def __init__(self, id: int, path: str) -> None:
@@ -95,7 +93,6 @@ class Supervisor:
         self.current_runner: Optional[Runner] = None
         self.sketch_cache: Dict[int, Sketch] = {}
         self.current_sketch_id: Optional[int] = None
-        self.projector = Projector()
     
     def sketch_already_running(self) -> bool:
         alive = False
@@ -190,18 +187,7 @@ class Supervisor:
             print("Failed to send heartbeat message. Received the following error...")
             print(e)
 
-        self.update_projector()
-
         self.save_state()
-
-    def update_projector(self):
-        current_time = datetime.now().time()
-        is_active_hours = current_time > ACTIVE_START_TIME and current_time < ACTIVE_END_TIME
-        if is_active_hours and self.projector.is_off():
-            self.projector.on()
-        
-        if not is_active_hours and self.projector.is_on():
-            self.projector.off()
 
 def main():
     try:
