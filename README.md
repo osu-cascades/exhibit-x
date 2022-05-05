@@ -32,10 +32,10 @@ The supervisor continuously runs in the backround, executing a loop about once a
 
 During each loop, the supervisor checks a few status items
 
-* What does the server want me to do?
-* What sketch should I be running?
-* Is that sketch running right now?
-  * If not, download and run it
+1. What does the server want me to do?
+2. What sketch should I be running?
+3. Is that sketch running right now?
+4. If not, download and run it
 
 #### Where?
 Under the main stairwell in Tykeson
