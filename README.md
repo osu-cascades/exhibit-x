@@ -22,6 +22,18 @@ creativity behind code.
 
 ## Exhibit Supervisor
 
+Running locally
+1. Navigate to the supervisor directory `cd exhibit_supervisor`
+2. Install packages `pip install -r requirements.txt`
+3. Install processing if not already installed
+4. Run `python3 ./supervisor.py`
+
+Running on exhibit
+1. Use the normal systemctl commands on ExhibitX.service
+  - Start `sudo systemctl start exhibitx`
+  - Stop `sudo systemctl stop exhibitx`
+  - Enable/Disable service `sudo systemctl <enable/disable> exhibitx`
+
 ### TL;DR
 
 #### What?
